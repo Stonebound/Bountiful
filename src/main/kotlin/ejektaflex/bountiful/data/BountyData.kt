@@ -15,7 +15,6 @@ import ejektaflex.bountiful.item.ItemBounty
 import ejektaflex.bountiful.registry.ValueRegistry
 import ejektaflex.compat.FacadeGameStages
 import net.minecraft.client.Minecraft
-import net.minecraft.client.entity.AbstractClientPlayer
 import net.minecraft.client.resources.I18n
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -121,7 +120,7 @@ class BountyData : IBountyData {
     private val rewardPretty: String
         get() {
             return "§f${I18n.format("bountiful.tooltip.rewards")}: " + rewards.items.joinToString(", ") {
-                "§f${it.amount}x §6${it.itemStack?.displayName}§f"
+                "§f${it.unitWorth}x §6${it.itemStack?.displayName}§f"
             } + "§r"
         }
 

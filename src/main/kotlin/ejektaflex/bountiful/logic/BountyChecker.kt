@@ -37,7 +37,7 @@ object BountyChecker {
         // Check to see if bounty meets all prerequisites
         val hasAllItems = stackPicked.all { picked ->
             val stacksMatching = prereqItems.filter { validStackCheck(it, picked.itemStack!!) }
-            val hasEnough = stacksMatching.sumBy { it.count } >= picked.amount
+            val hasEnough = stacksMatching.sumBy { it.count } >= picked.unitWorth
             if (!hasEnough) {
                 player.sendTranslation("bountiful.cannot.fulfill")
             }
@@ -56,12 +56,12 @@ object BountyChecker {
         data.toGet.items.mapNotNull { it as? PickedEntryStack }.forEach { picked ->
             val stacksToChange = matched.filter { validStackCheck(it, picked.itemStack!!) }
             for (stack in stacksToChange) {
-                if (picked.amount == 0) {
+                if (picked.unitWorth == 0) {
                     break
                 }
-                val amountToRemove = min(stack.count, picked.amount)
+                val amountToRemove = min(stack.count, picked.unitWorth)
                 stack.count -= amountToRemove
-                picked.amount -= amountToRemove
+                picked.unitWorth -= amountToRemove
             }
         }
     }
@@ -79,7 +79,7 @@ object BountyChecker {
 
         bountyEntities.forEach { picked ->
             if (picked.entityEntry?.registryName?.toString() == entity.registryName?.toString()) {
-                if (picked.killedAmount < picked.amount) {
+                if (picked.killedAmount < picked.unitWorth) {
                     picked.killedAmount++
                 }
             }
@@ -92,7 +92,7 @@ object BountyChecker {
         return if (bountyEntities.isEmpty()) {
             true
         } else {
-            bountyEntities.all { it.killedAmount == it.amount }
+            bountyEntities.all { it.killedAmount == it.unitWorth }
         }
     }
 
@@ -100,7 +100,7 @@ object BountyChecker {
 
         // Reward player with rewards
         data.rewards.items.forEach { reward ->
-            var amountNeededToGive = reward.amount
+            var amountNeededToGive = reward.unitWorth
             val stacksToGive = mutableListOf<ItemStack>()
             while (amountNeededToGive > 0) {
                 val stackSize = min(amountNeededToGive, bountyItem.maxStackSize)

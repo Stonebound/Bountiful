@@ -26,12 +26,12 @@ interface IBountyData : INBTSerializable<NBTTagCompound>, IStageRequirement {
     var rarity: Int
 
     /**
-     * A list of pairs of itemstacks needed to fulfill a bounty, and the amount needed.
+     * A list of pairs of itemstacks needed to fulfill a bounty, and the unitWorth needed.
      */
     val toGet: IValueRegistry<IPickedEntry>
 
     /**
-     * A list of pairs of itemstacks used as rewards for the bounty, and the amount needed.
+     * A list of pairs of itemstacks used as rewards for the bounty, and the unitWorth needed.
      */
     val rewards: IValueRegistry<PickedEntryStack>
 

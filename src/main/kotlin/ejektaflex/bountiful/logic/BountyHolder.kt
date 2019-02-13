@@ -62,7 +62,7 @@ open class BountyHolder(override val handler: ItemStackHandler) : IBountyHolder,
             tickBounties(world)
         }
         if (world.totalWorldTime % Bountiful.config.boardAddFrequency == 3L) {
-            // Prune items to max amount - new amount
+            // Prune items to max unitWorth - new unitWorth
             while (handler.filledSlots.size >= Bountiful.config.maxBountiesPerBoard && handler.filledSlots.isNotEmpty()) {
                 val slotPicked = handler.filledSlots.random()
                 handler[slotPicked] = ItemStack.EMPTY

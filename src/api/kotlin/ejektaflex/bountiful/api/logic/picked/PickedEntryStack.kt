@@ -22,14 +22,14 @@ data class PickedEntryStack(
         get() = itemStack
 
     override val prettyContent: String
-        get() = "§f${amount}x §a${itemStack?.displayName}§r"
+        get() = "§f${unitWorth}x §a${itemStack?.displayName}§r"
 
     override fun isValid(): Boolean {
         return contentObj != null
     }
 
     override fun toString(): String {
-        return "PickedEntry (Stack) [Item: $content, Amount: $amount, NBT: $tag, Weight: $weight, Stages: ${genericPick.stages}]"
+        return "PickedEntry (Stack) [Item: $content, Amount: $unitWorth, NBT: $tag, Weight: $weight, Stages: ${genericPick.stages}]"
     }
 
 

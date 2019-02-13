@@ -1,38 +1,38 @@
 package ejektaflex.bountiful.data
 
+import ejektaflex.bountiful.api.ext.ir
 import ejektaflex.bountiful.api.logic.ItemRange
-import ejektaflex.bountiful.api.logic.pickable.PickableEntry
 import ejektaflex.bountiful.api.logic.picked.PickedEntry
 import ejektaflex.bountiful.api.logic.picked.PickedEntryStack
 import ejektaflex.bountiful.registry.ValueRegistry
 
 object DefaultData {
 
-    val entries = ValueRegistry<PickableEntry>().apply {
+    val entries = ValueRegistry<PickedEntry>().apply {
         add(
-            PickableEntry("minecraft:dirt", 16..128, 5),
-            PickableEntry("minecraft:stone", 16..128, 10),
-            PickableEntry("minecraft:cobblestone", 16..128, 7),
-            PickableEntry("minecraft:fish", 2..32, 80),
-            PickableEntry("minecraft:apple", 2..32, 70),
-            PickableEntry("minecraft:book", 2..16, 80),
-            PickableEntry("minecraft:cactus", 2..32, 80),
-            PickableEntry("minecraft:diamond", 1..8, 1600),
-            PickableEntry("minecraft:dispenser", 1..6, 200),
-            PickableEntry("minecraft:iron_ingot", 1..32, 200),
-            PickableEntry("minecraft:bread", 1..12, 60),
-            PickableEntry("minecraft:rotten_flesh", 1..24, 55),
-            PickableEntry("minecraft:sign", 1..16, 65),
-            PickableEntry("minecraft:slime_ball", 1..32, 60),
-            PickableEntry("minecraft:spider_eye", 1..16, 75),
-            PickableEntry("minecraft:string", 1..24, 35),
-            PickableEntry("minecraft:sugar", 1..64, 55),
-            PickableEntry("minecraft:tripwire_hook", 1..8, 70),
-            PickableEntry("minecraft:wheat", 1..48, 20),
-            PickableEntry("minecraft:leather", 1..12, 90),
-            PickableEntry("entity:minecraft:zombie", 1..8, 120, weight = 300),
-            PickableEntry("entity:minecraft:skeleton", 1..6, 140, weight = 250),
-            PickableEntry("minecraft:potion", 1..3, 300, nbtJson = "{Potion: \"minecraft:healing\"}")
+            PickedEntry("minecraft:dirt", 5, amountRange = (16..128).ir),
+            PickedEntry("minecraft:stone", 10, amountRange = (16..128).ir),
+            PickedEntry("minecraft:cobblestone", 7, amountRange = (16..128).ir),
+            PickedEntry("minecraft:fish", 80, amountRange = (2..32).ir),
+            PickedEntry("minecraft:apple", 70, amountRange = (2..32).ir),
+            PickedEntry("minecraft:book", 80, amountRange = (2..16).ir),
+            PickedEntry("minecraft:cactus", 80, amountRange = (2..32).ir),
+            PickedEntry("minecraft:diamond", 1600, amountRange = (1..8).ir),
+            PickedEntry("minecraft:dispenser", 200, amountRange = (1..6).ir),
+            PickedEntry("minecraft:iron_ingot", 200, amountRange = (1..32).ir),
+            PickedEntry("minecraft:bread", 60, amountRange = (1..12).ir),
+            PickedEntry("minecraft:rotten_flesh", 55, amountRange = (1..24).ir),
+            PickedEntry("minecraft:sign", 65, amountRange = (1..16).ir),
+            PickedEntry("minecraft:slime_ball", 60, amountRange = (1..32).ir),
+            PickedEntry("minecraft:spider_eye", 75, amountRange = (1..16).ir),
+            PickedEntry("minecraft:string", 35, amountRange = (1..24).ir),
+            PickedEntry("minecraft:sugar", 55, amountRange = (1..64).ir),
+            PickedEntry("minecraft:tripwire_hook", 70, amountRange = (1..8).ir),
+            PickedEntry("minecraft:wheat", 20, amountRange = (1..48).ir),
+            PickedEntry("minecraft:leather", 90, amountRange = (1..12).ir),
+            PickedEntry("entity:minecraft:zombie", 120, weight = 300, amountRange = (1..8).ir),
+            PickedEntry("entity:minecraft:skeleton", 140, weight = 250, amountRange = (1..6).ir),
+            PickedEntry("minecraft:potion", 300, nbtJson = "{Potion: \"minecraft:healing\"}", amountRange = (1..3).ir)
         )
     }
 
@@ -42,12 +42,12 @@ object DefaultData {
                 PickedEntryStack(PickedEntry("minecraft:gold_ingot", 900)),
                 PickedEntryStack(PickedEntry("minecraft:diamond", 2400, 10)),
                 //PickedEntryStack(PickedEntry("minecraft:potion", 800, 5)),
-                PickedEntryStack(PickedEntry("minecraft:iron_sword", 750, 5, nbtJson = "{display:{Lore:[\"Sharper than Usual.\"]},ench:[{id:16,lvl:1}]}", range = ItemRange(1, 1))),
-                PickedEntryStack(PickedEntry("minecraft:leather_helmet", 500, 5, range = ItemRange(1, 1))),
-                PickedEntryStack(PickedEntry("minecraft:leather_boots", 450, 5, range = ItemRange(1, 1))),
-                PickedEntryStack(PickedEntry("minecraft:iron_chestplate", 1800, 5, range = ItemRange(1, 1))),
-                PickedEntryStack(PickedEntry("minecraft:golden_chestplate", 1200, 5, range = ItemRange(1, 1))),
-                PickedEntryStack(PickedEntry("minecraft:bow", 1300, 10, "{ench:[{id:48,lvl:2}]}", range = ItemRange(1, 1)))
+                PickedEntryStack(PickedEntry("minecraft:iron_sword", 750, 5, nbtJson = "{display:{Lore:[\"Sharper than Usual.\"]},ench:[{id:16,lvl:1}]}", amountRange = ItemRange(1, 1))),
+                PickedEntryStack(PickedEntry("minecraft:leather_helmet", 500, 5, amountRange = ItemRange(1, 1))),
+                PickedEntryStack(PickedEntry("minecraft:leather_boots", 450, 5, amountRange = ItemRange(1, 1))),
+                PickedEntryStack(PickedEntry("minecraft:iron_chestplate", 1800, 5, amountRange = ItemRange(1, 1))),
+                PickedEntryStack(PickedEntry("minecraft:golden_chestplate", 1200, 5, amountRange = ItemRange(1, 1))),
+                PickedEntryStack(PickedEntry("minecraft:bow", 1300, 10, "{ench:[{id:48,lvl:2}]}", amountRange = ItemRange(1, 1)))
         )
     }
 

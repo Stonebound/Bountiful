@@ -73,8 +73,8 @@ object BountyCreator : IBountyCreator {
                 val picked = it.pick()
                 if (picked.contentObj != null) {
                     toGet.add(picked)
-                    worth += (picked.amount * it.unitWorth)
-                    preBountyTime += (picked.amount * it.unitWorth * picked.timeMult())
+                    worth += (picked.unitWorth * it.unitWorth)
+                    preBountyTime += (picked.unitWorth * it.unitWorth * picked.timeMult())
                 } else {
                     throw BountyCreationException("You tried to create a bounty but the item was invalid! Item was: ${picked.content}")
                 }
@@ -118,9 +118,9 @@ object BountyCreator : IBountyCreator {
                 false -> validRewards.weightedRandom
             }
 
-            val maxNumCouldGive = (worthLeft / reward.amount)
+            val maxNumCouldGive = (worthLeft / reward.unitWorth)
             val numCanGive = maxNumCouldGive.let {
-                val minMaxRange = reward.genericPick.range
+                val minMaxRange = reward.genericPick.amountRange
                 if (minMaxRange != null) {
                     it.clampTo(minMaxRange.toIntRange())
                 } else {
@@ -128,7 +128,7 @@ object BountyCreator : IBountyCreator {
                 }
             }
 
-            val worthSated = reward.amount * numCanGive
+            val worthSated = reward.unitWorth * numCanGive
             worthLeft -= worthSated
             val rewardClone = PickedEntryStack(PickedEntry(reward.content, numCanGive, nbtJson = reward.tag?.toString(), stages = reward.stages))
             picked.add(rewardClone.content) // Don't show up again!
@@ -138,8 +138,8 @@ object BountyCreator : IBountyCreator {
 
         // If there were no valid rewards, find the cheapest item and give them that.
         if (toRet.isEmpty()) {
-            val lowestWorthItem = RewardRegistry.validRewards(world).minBy { it.amount }!!
-            toRet.add(PickedEntryStack(PickedEntry(lowestWorthItem.content, lowestWorthItem.genericPick.range?.min ?: 1, nbtJson = lowestWorthItem.tag?.toString())))
+            val lowestWorthItem = RewardRegistry.validRewards(world).minBy { it.unitWorth }!!
+            toRet.add(PickedEntryStack(PickedEntry(lowestWorthItem.content, lowestWorthItem.genericPick.amountRange?.min ?: 1, nbtJson = lowestWorthItem.tag?.toString())))
         }
 
         return toRet

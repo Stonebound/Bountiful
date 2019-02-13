@@ -9,9 +9,9 @@ import net.minecraftforge.common.util.INBTSerializable
 interface IPickedEntry : INBTSerializable<NBTTagCompound>, IPickCommon, IValidatable, Cloneable, IWeighted {
 
     /**
-     * An integer representing the amount of this content you need to complete the bounty
+     * An integer representing the unitWorth of this content you need to complete the bounty
      */
-    var amount: Int
+    var unitWorth: Int
 
     /**
      * The accompanying NBT data of the picked item, if there is any

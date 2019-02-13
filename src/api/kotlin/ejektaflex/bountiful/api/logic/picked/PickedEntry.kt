@@ -9,18 +9,20 @@ import net.minecraft.nbt.*
 
 open class PickedEntry(
         override var content: String = "UNDEFINED",
-        @SerializedName("unitWorth")
-        override var amount: Int = Integer.MIN_VALUE,
+        override var unitWorth: Int = Integer.MIN_VALUE,
         override var weight: Int = 100,
         @SerializedName("nbt_data")
         override var nbtJson: String? = null,
         override var stages: MutableList<String>? = null,
-        @SerializedName("amount") // oh boy
-        var range: ItemRange? = null
+        var amountRange: ItemRange? = null,
+        var amount: Int = amountRange?.min ?: 1
 ) : IPickedEntry, IHasTag {
 
+    val randCount: Int
+        get() = ((amountRange?.min ?: 1)..(amountRange?.max ?: Int.MAX_VALUE)).random()
+
     val minValueOfPick: Int
-        get() = amount * (range?.min ?: 1)
+        get() = unitWorth * (amountRange?.min ?: 1)
 
     // Must override because overriding [nbtJson]
     override val tag: NBTTagCompound?
@@ -31,7 +33,7 @@ open class PickedEntry(
     override fun serializeNBT(): NBTTagCompound {
         return NBTTagCompound().apply {
             setString("content", content)
-            setInteger("amount", amount)
+            setInteger("unitWorth", unitWorth)
             tag?.let {
                 setTag("nbt", it)
             }
@@ -39,16 +41,20 @@ open class PickedEntry(
         }
     }
 
+    fun pick() {
+        amount = randCount
+    }
+
     override fun deserializeNBT(tag: NBTTagCompound) {
         content = tag.getString("content")
-        amount = tag.getInteger("amount")
+        unitWorth = tag.getInteger("unitWorth")
         if (tag.hasKey("nbt")) {
             nbtJson = tag.getCompoundTag("nbt").toString()
         }
         stages = tag.getUnsortedStringSet("stages").toMutableList()
     }
 
-    override fun toString() = "Picked(§f${amount}x §6$content)"
+    override fun toString() = "Picked(§f${unitWorth}x §6$content)"
 
     override val prettyContent: String
         get() = toString()

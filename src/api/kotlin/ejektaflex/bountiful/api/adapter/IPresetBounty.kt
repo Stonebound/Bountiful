@@ -5,7 +5,7 @@ import ejektaflex.bountiful.api.logic.picked.IPickedEntry
 
 interface IPresetBounty : IWeighted {
     /**
-     * A list of strings representing which objectives you must complete in order to complete the bounty, as well as the amount of each
+     * A list of strings representing which objectives you must complete in order to complete the bounty, as well as the unitWorth of each
      */
     val objectives: MutableList<PresetBounty.BountyObjective>
 

@@ -36,10 +36,10 @@ data class PickedEntryEntity(
         get() = entityEntry
 
     override val prettyContent: String
-        get() = ("($killedAmount/$amount) §a" + I18n.format("entity." + entityEntry?.name + ".name") + " Kills§r")
+        get() = ("($killedAmount/$unitWorth) §a" + I18n.format("entity." + entityEntry?.name + ".name") + " Kills§r")
 
     override fun toString(): String {
-        return "PickedEntry (Entity) [Entity: $content, Amount: $amount, Weight: $weight]"
+        return "PickedEntry (Entity) [Entity: $content, Amount: $unitWorth, Weight: $weight]"
     }
 
     override fun isValid(): Boolean {

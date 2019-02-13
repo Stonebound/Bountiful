@@ -1,6 +1,7 @@
 package ejektaflex.bountiful.api.ext
 
 import ejektaflex.bountiful.api.data.IWeighted
+import ejektaflex.bountiful.api.logic.ItemRange
 import net.minecraft.client.Minecraft
 import net.minecraft.command.ICommandSender
 import net.minecraft.entity.Entity
@@ -57,6 +58,9 @@ fun Double.clampTo(low: Double, high: Double): Double {
 fun Long.clampTo(range: LongRange): Long {
     return max(range.first, min(this, range.last))
 }
+
+val IntRange.ir: ItemRange
+    get() = ItemRange(this.first, this.last)
 
 val <T : IWeighted> List<T>.weightedRandom: T
     get() {
