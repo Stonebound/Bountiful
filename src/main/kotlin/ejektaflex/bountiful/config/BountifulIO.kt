@@ -21,7 +21,7 @@ object BountifulIO {
         return newDir
     }
 
-    fun populateConfigFolder(folder: File, defaultData: List<Any>, fileName: String): File {
+    fun populateConfigFolder(folder: File, defaultData: Any, fileName: String): File {
         val gson = GsonBuilder().setPrettyPrinting().create()
         // Populate entries, fill if none exist
         val fileToPopulate = File(folder, fileName)
@@ -29,7 +29,7 @@ object BountifulIO {
             fileToPopulate.apply {
                 createNewFile()
                 println("Going to serialize content..")
-                val content = gson.toJson(defaultData.toTypedArray())
+                val content = gson.toJson(defaultData)
                 //println("Content: $contentObj")
                 writeText(content)
             }
@@ -103,7 +103,7 @@ object BountifulIO {
     }
 
     fun hotReloadRewards(): List<PickedEntryStack> {
-        return hotReload("rewards.json", RewardRegistry, Array<PickedEntry>::class.java, { PickedEntryStack(it) }) {
+        return hotReload("rewardPools.json", RewardRegistry, Array<PickedEntry>::class.java, { PickedEntryStack(it) }) {
             it.isValid()
         }
     }

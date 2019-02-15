@@ -26,6 +26,8 @@ object Bountiful : IProxy {
 
     lateinit var logger: Logger
     lateinit var configDir: File
+    lateinit var decreeDir: File
+    lateinit var poolDir: File
     lateinit var config: ConfigFile
 
     @Mod.Instance
@@ -35,6 +37,8 @@ object Bountiful : IProxy {
     override fun preInit(e: FMLPreInitializationEvent) {
         logger = e.modLog
         configDir = BountifulIO.ensureDirectory(e.modConfigurationDirectory, BountifulInfo.MODID)
+        decreeDir = BountifulIO.ensureDirectory(configDir, "decrees")
+        poolDir = BountifulIO.ensureDirectory(configDir, "pools")
         config = ConfigFile(configDir)
         config.load()
         MinecraftForge.EVENT_BUS.register(ContentRegistry)

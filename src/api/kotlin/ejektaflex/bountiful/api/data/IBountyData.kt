@@ -31,7 +31,7 @@ interface IBountyData : INBTSerializable<NBTTagCompound>, IStageRequirement {
     val toGet: IValueRegistry<IPickedEntry>
 
     /**
-     * A list of pairs of itemstacks used as rewards for the bounty, and the unitWorth needed.
+     * A list of pairs of itemstacks used as rewardPools for the bounty, and the unitWorth needed.
      */
     val rewards: IValueRegistry<PickedEntryStack>
 

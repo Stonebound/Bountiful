@@ -1,16 +1,16 @@
 package ejektaflex.bountiful.api.adapter
 
-import ejektaflex.bountiful.api.data.IWeighted
+import ejektaflex.bountiful.api.generic.IWeighted
 import ejektaflex.bountiful.api.logic.picked.IPickedEntry
 
 interface IPresetBounty : IWeighted {
     /**
-     * A list of strings representing which objectives you must complete in order to complete the bounty, as well as the unitWorth of each
+     * A list of strings representing which objectivePools you must complete in order to complete the bounty, as well as the unitWorth of each
      */
     val objectives: MutableList<PresetBounty.BountyObjective>
 
     /**
-     * A list of strings representing stacks which are the rewards completing the bounty.
+     * A list of strings representing stacks which are the rewardPools completing the bounty.
      */
     val rewards: MutableList<PresetBounty.BountyReward>
 
@@ -25,12 +25,12 @@ interface IPresetBounty : IWeighted {
     fun isValid(): Boolean
 
     /**
-     * Returns the bounty objectives, as a [List<IPickedEntry>]
+     * Returns the bounty objectivePools, as a [List<IPickedEntry>]
      */
     fun objectiveContent(): List<IPickedEntry>
 
     /**
-     * Returns the rewards, as a [List<IPickedEntry>]
+     * Returns the rewardPools, as a [List<IPickedEntry>]
      */
     fun rewardContent(): List<IPickedEntry>
 }

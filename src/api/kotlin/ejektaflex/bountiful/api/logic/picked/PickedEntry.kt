@@ -14,15 +14,12 @@ open class PickedEntry(
         @SerializedName("nbt_data")
         override var nbtJson: String? = null,
         override var stages: MutableList<String>? = null,
-        var amountRange: ItemRange? = null,
+        override var amountRange: ItemRange? = null,
         var amount: Int = amountRange?.min ?: 1
 ) : IPickedEntry, IHasTag {
 
     val randCount: Int
         get() = ((amountRange?.min ?: 1)..(amountRange?.max ?: Int.MAX_VALUE)).random()
-
-    val minValueOfPick: Int
-        get() = unitWorth * (amountRange?.min ?: 1)
 
     // Must override because overriding [nbtJson]
     override val tag: NBTTagCompound?

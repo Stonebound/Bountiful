@@ -2,6 +2,7 @@ package ejektaflex.bountiful.api.registry
 
 
 interface IValueRegistry<T : Any> {
+    val content: MutableList<T>
     fun add(vararg items: T)
     fun remove(item: T): Boolean
     fun backup(): List<T>

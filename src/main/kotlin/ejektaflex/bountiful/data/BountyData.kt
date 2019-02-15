@@ -75,8 +75,8 @@ class BountyData : IBountyData {
     private fun tooltipInfoAdvanced(world: World): List<String> {
         val cycleLength = 27 // ticks per cycle
 
-        val getItems: List<Pair<IPickedEntry, String>> =  toGet.items.filter { it is PickedEntryStack }.map { it to I18n.format("bountiful.tooltip.requiredDetails") }
-        val getRewards: List<Pair<IPickedEntry, String>> =  rewards.items.map { it to I18n.format("bountiful.tooltip.rewardsDetails") }
+        val getItems: List<Pair<IPickedEntry, String>> =  toGet.content.filter { it is PickedEntryStack }.map { it to I18n.format("bountiful.tooltip.requiredDetails") }
+        val getRewards: List<Pair<IPickedEntry, String>> =  rewards.content.map { it to I18n.format("bountiful.tooltip.rewardsDetails") }
         val allGets = getItems + getRewards
 
         return if (allGets.isEmpty()) {
@@ -107,10 +107,10 @@ class BountyData : IBountyData {
 
     private val getPretty: String
         get() {
-            return if (toGet.items.isEmpty()) {
+            return if (toGet.content.isEmpty()) {
                 "§6Completed. §aTurn it in!"
             } else {
-                "§f${I18n.format("bountiful.tooltip.required")}: " + toGet.items.joinToString(", ") {
+                "§f${I18n.format("bountiful.tooltip.required")}: " + toGet.content.joinToString(", ") {
                     it.prettyContent
                 } + "§r"
             }
@@ -119,13 +119,13 @@ class BountyData : IBountyData {
 
     private val rewardPretty: String
         get() {
-            return "§f${I18n.format("bountiful.tooltip.rewards")}: " + rewards.items.joinToString(", ") {
+            return "§f${I18n.format("bountiful.tooltip.rewardPools")}: " + rewards.content.joinToString(", ") {
                 "§f${it.unitWorth}x §6${it.itemStack?.displayName}§f"
             } + "§r"
         }
 
     override fun requiredStages(): List<String> {
-        return toGet.items.map { it.requiredStages() }.flatten() + rewards.items.map { it.requiredStages() }.flatten()
+        return toGet.content.map { it.requiredStages() }.flatten() + rewards.content.map { it.requiredStages() }.flatten()
     }
 
     override fun deserializeNBT(tag: NBTTagCompound) {
@@ -150,8 +150,8 @@ class BountyData : IBountyData {
             setInteger(BountyNBT.Rarity.key, rarity)
             setInteger(BountyNBT.Worth.key, worth)
             bountyStamp?.let { setLong(BountyNBT.BountyStamp.key, it) }
-            setUnsortedList(BountyNBT.ToGet.key, toGet.items.toSet())
-            setUnsortedList(BountyNBT.Rewards.key, rewards.items.toSet())
+            setUnsortedList(BountyNBT.ToGet.key, toGet.content.toSet())
+            setUnsortedList(BountyNBT.Rewards.key, rewards.content.toSet())
         }
     }
 

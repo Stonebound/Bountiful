@@ -43,7 +43,7 @@ object BountyCreator : IBountyCreator {
 
     private fun precheckRegistries(world: World) {
         if (RewardRegistry.validRewards(world).isEmpty()) {
-            throw BountyCreationException("There are no valid rewards in the reward registry!")
+            throw BountyCreationException("There are no valid rewardPools in the reward registry!")
         }
         if (BountyRegistry.validBounties(world).size < Bountiful.config.bountyAmountRange.last) {
             throw BountyCreationException("There are not enough valid bounties in the bounty registry! (At least ${Bountiful.config.bountyAmountRange} must be valid at any one time).")
@@ -54,7 +54,7 @@ object BountyCreator : IBountyCreator {
         // Throw exception if we can't complete the bounty
         precheckRegistries(world)
 
-        // Shuffle bounty registry and take a random number of bounty items
+        // Shuffle bounty registry and take a random number of bounty content
         val pickedAlready = mutableListOf<PickableEntry>()
 
         val toPick = Bountiful.config.bountyAmountRange.random()
@@ -85,7 +85,7 @@ object BountyCreator : IBountyCreator {
             // Make worth affected by rarity
             worth = (worth * EnumBountyRarity.getRarityFromInt(rarity).bountyMult).toInt()
 
-            // Generate rewards based on worth
+            // Generate rewardPools based on worth
             findRewards(world, worth).forEach {
                 rewards.add(it)
             }
@@ -136,7 +136,7 @@ object BountyCreator : IBountyCreator {
             validRewards = RewardRegistry.validRewards(world, worthLeft, picked)
         }
 
-        // If there were no valid rewards, find the cheapest item and give them that.
+        // If there were no valid rewardPools, find the cheapest item and give them that.
         if (toRet.isEmpty()) {
             val lowestWorthItem = RewardRegistry.validRewards(world).minBy { it.unitWorth }!!
             toRet.add(PickedEntryStack(PickedEntry(lowestWorthItem.content, lowestWorthItem.genericPick.amountRange?.min ?: 1, nbtJson = lowestWorthItem.tag?.toString())))

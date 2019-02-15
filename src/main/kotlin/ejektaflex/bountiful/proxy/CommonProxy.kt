@@ -4,6 +4,7 @@ import ejektaflex.bountiful.Bountiful
 import ejektaflex.bountiful.BountifulInfo
 import ejektaflex.bountiful.api.events.PopulateBountyBoardEvent
 import ejektaflex.bountiful.api.ext.ifHasCapability
+import ejektaflex.bountiful.api.registry.IValueRegistry
 import ejektaflex.bountiful.cap.*
 import ejektaflex.bountiful.config.BountifulIO
 import ejektaflex.bountiful.data.DefaultData
@@ -13,7 +14,6 @@ import ejektaflex.bountiful.registry.BountyRegistry
 import ejektaflex.bountiful.registry.RewardRegistry
 import ejektaflex.bountiful.api.stats.BountifulStats
 import ejektaflex.bountiful.data.BountyData
-import ejektaflex.bountiful.logic.BountyCreator
 import ejektaflex.bountiful.worldgen.VillageBoardComponent
 import ejektaflex.bountiful.worldgen.VillageBoardCreationHandler
 import net.minecraft.entity.player.EntityPlayer
@@ -84,37 +84,49 @@ open class CommonProxy : IProxy {
     }
 
     override fun postInit(e: FMLPostInitializationEvent) {
+
+        for (decree in DefaultData.decrees.content) {
+            BountifulIO.populateConfigFolder(Bountiful.decreeDir, decree, "${decree.id}.json")
+        }
+3
+        for (pool in DefaultData.pools.content) {
+            BountifulIO.populateConfigFolder(Bountiful.poolDir, pool, "${pool.id}.json")
+        }
+
         // Populate entries, fill if none exist
         "bounties.json".let {
-            BountifulIO.populateConfigFolder(Bountiful.configDir, DefaultData.entries.items, it)
+            BountifulIO.populateConfigFolder(Bountiful.configDir, DefaultData.entries.content.toTypedArray(), it)
             val invalids = BountifulIO.hotReloadBounties()
             if (invalids.isNotEmpty()) {
-                throw Exception("'bountiful/bounties.json' contains one or more invalid bounties. Invalid bounty objectives: $invalids")
+                throw Exception("'bountiful/bounties.json' contains one or more invalid bounties. Invalid bounty objectivePools: $invalids")
             }
             val minObjectives = Bountiful.config.bountyAmountRange.last
-            if (BountyRegistry.items.size < minObjectives) {
-                throw Exception("Config file needs more bounties! Must have at least $minObjectives bounty objectives to choose from, according to the current config.")
+            if (BountyRegistry.content.size < minObjectives) {
+                throw Exception("Config file needs more bounties! Must have at least $minObjectives bounty objectivePools to choose from, according to the current config.")
             }
         }
 
-        // Same for rewards
-        "rewards.json".let {
-            BountifulIO.populateConfigFolder(Bountiful.configDir, DefaultData.rewards.items.map { item ->
+        // Same for rewardPools
+        "rewardPools.json".let {
+            BountifulIO.populateConfigFolder(Bountiful.configDir, DefaultData.rewards.content.toTypedArray().map { item ->
                 item.genericPick
             }, it)
             val invalids = BountifulIO.hotReloadRewards()
             if (invalids.isNotEmpty()) {
-                throw Exception("'bountiful/rewards.json' contains one or more invalid rewards. Invalid rewards: $invalids")
+                throw Exception("'bountiful/rewardPools.json' contains one or more invalid rewardPools. Invalid rewardPools: $invalids")
             }
         }
 
         BountifulStats.register()
 
-        println("Bounties: ${BountyRegistry.items.size}")
-        BountyRegistry.items.forEach { println(it) }
+        fun displayRegistry(reg: IValueRegistry<*>, name: String) {
+            println("$name: ${reg.content.size}")
+            reg.content.forEach { println(it) }
+        }
 
-        println("Rewards: ${RewardRegistry.items.size}")
-        RewardRegistry.items.forEach { println(it) }
+        displayRegistry(BountyRegistry, "Bounties")
+        displayRegistry(RewardRegistry, "Rewards")
+
     }
 
 }

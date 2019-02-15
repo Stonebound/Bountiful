@@ -170,7 +170,7 @@ class ItemBounty : Item(), IItemBounty {
             // Remove bounty note
             player.setHeldItem(hand, ItemStack.EMPTY)
 
-            // Reward player with rewards
+            // Reward player with rewardPools
             BountyChecker.rewardItems(player, bounty, bountyItem)
 
             val bountyRarity = EnumBountyRarity.getRarityFromInt(bounty.rarity)

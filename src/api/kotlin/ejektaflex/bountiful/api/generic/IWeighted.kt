@@ -1,4 +1,4 @@
-package ejektaflex.bountiful.api.data
+package ejektaflex.bountiful.api.generic
 
 interface IWeighted {
     var weight: Int

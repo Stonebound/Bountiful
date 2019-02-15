@@ -114,14 +114,14 @@ data class ConfigFile(val folder: File) : KConfig(folder, "bountiful.cfg"), IBou
                 CATEGORY_BOUNTY,
                 "Bounty Items Max",
                 2,
-                "The maximum number of objectives that a bounty could ask for (Default: 2)"
+                "The maximum number of objectivePools that a bounty could ask for (Default: 2)"
         ).int.clampTo(1..64)
 
         bountyAmountMin = config.get(
                 CATEGORY_BOUNTY,
                 "Bounty Items Min",
                 1,
-                "The minimum number of objectives that a bounty could ask for (Default: 1)"
+                "The minimum number of objectivePools that a bounty could ask for (Default: 1)"
         ).int.clampTo(1..64)
 
         bountyTimeMin = config.get(
@@ -177,7 +177,7 @@ data class ConfigFile(val folder: File) : KConfig(folder, "bountiful.cfg"), IBou
                 CATEGORY_REWARDS,
                 "Greedy Rewards?",
                 false,
-                "If using a currency for rewards, set this to true. By default (false), rewards will be picked at random until they match the bounty value (adjusted by rarity). If true, rewards will be greedily chosen (The most expensive coming first) until they match the bounty value. Currency rewards benefit from setting this to true because the highest possible coin values will be given first. With this turned on, reward weights are ignored."
+                "If using a currency for rewardPools, set this to true. By default (false), rewardPools will be picked at random until they match the bounty value (adjusted by rarity). If true, rewardPools will be greedily chosen (The most expensive coming first) until they match the bounty value. Currency rewardPools benefit from setting this to true because the highest possible coin values will be given first. With this turned on, reward weights are ignored."
         ).boolean
 
         villageGeneration = config.get(
@@ -254,7 +254,7 @@ data class ConfigFile(val folder: File) : KConfig(folder, "bountiful.cfg"), IBou
         private const val CATEGORY_BOARD = "board"
         private const val CATEGORY_BOUNTY = "bounty"
         private const val CATEGORY_RARITY = "rarity"
-        private const val CATEGORY_REWARDS = "rewards"
+        private const val CATEGORY_REWARDS = "rewardPools"
         private const val CATEGORY_MISC = "misc"
         private const val CATEGORY_COMPAT = "compat"
     }

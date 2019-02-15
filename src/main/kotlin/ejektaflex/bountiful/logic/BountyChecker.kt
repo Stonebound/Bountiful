@@ -22,7 +22,7 @@ object BountyChecker {
     }
 
     fun hasItems(player: EntityPlayer, inv: NonNullList<ItemStack>, data: BountyData): List<ItemStack>? {
-        val stackPicked = data.toGet.items.mapNotNull { it as? PickedEntryStack }
+        val stackPicked = data.toGet.content.mapNotNull { it as? PickedEntryStack }
 
         println(stackPicked)
 
@@ -32,7 +32,7 @@ object BountyChecker {
             }
         }
 
-        println("Prereq items: $prereqItems")
+        println("Prereq content: $prereqItems")
 
         // Check to see if bounty meets all prerequisites
         val hasAllItems = stackPicked.all { picked ->
@@ -53,7 +53,7 @@ object BountyChecker {
 
     fun takeItems(player: EntityPlayer, inv: NonNullList<ItemStack>, data: BountyData, matched: List<ItemStack>) {
         // If it does, reduce count of all relevant stacks
-        data.toGet.items.mapNotNull { it as? PickedEntryStack }.forEach { picked ->
+        data.toGet.content.mapNotNull { it as? PickedEntryStack }.forEach { picked ->
             val stacksToChange = matched.filter { validStackCheck(it, picked.itemStack!!) }
             for (stack in stacksToChange) {
                 if (picked.unitWorth == 0) {
@@ -75,7 +75,7 @@ object BountyChecker {
             return
         }
 
-        val bountyEntities = data.toGet.items.mapNotNull { it as? PickedEntryEntity }
+        val bountyEntities = data.toGet.content.mapNotNull { it as? PickedEntryEntity }
 
         bountyEntities.forEach { picked ->
             if (picked.entityEntry?.registryName?.toString() == entity.registryName?.toString()) {
@@ -88,7 +88,7 @@ object BountyChecker {
     }
 
     fun hasEntitiesFulfilled(data: BountyData): Boolean {
-        val bountyEntities = data.toGet.items.mapNotNull { it as? PickedEntryEntity }
+        val bountyEntities = data.toGet.content.mapNotNull { it as? PickedEntryEntity }
         return if (bountyEntities.isEmpty()) {
             true
         } else {
@@ -98,8 +98,8 @@ object BountyChecker {
 
     fun rewardItems(player: EntityPlayer, data: BountyData, bountyItem: ItemStack) {
 
-        // Reward player with rewards
-        data.rewards.items.forEach { reward ->
+        // Reward player with rewardPools
+        data.rewards.content.forEach { reward ->
             var amountNeededToGive = reward.unitWorth
             val stacksToGive = mutableListOf<ItemStack>()
             while (amountNeededToGive > 0) {

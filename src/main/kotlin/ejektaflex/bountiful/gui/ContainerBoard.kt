@@ -25,7 +25,7 @@ class ContainerBoard(playerInv: InventoryPlayer, boardTE: TileEntityBountyBoard)
                         boardTE.markDirty()
                     }
 
-                    // The only valid items are ItemBounty with valid BountyData.
+                    // The only valid content are ItemBounty with valid BountyData.
                     override fun isItemValid(stack: ItemStack): Boolean {
                         return if (stack.item is ItemBounty) {
                             return BountyData.isValidBounty(stack)

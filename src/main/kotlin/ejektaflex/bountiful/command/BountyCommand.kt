@@ -60,20 +60,20 @@ class BountyCommand : ICommand {
         if (args.isNotEmpty()) {
             when (val curr: String = args[0]) {
 
-                // "/bo bounties" & "/bo rewards" are only meant to be used in dev right now
+                // "/bo bounties" & "/bo rewardPools" are only meant to be used in dev right now
                 "bounties" -> {
                     if (hasBasicPerms(sender)) {
                         sender.sendMessage("§6Bounties:")
-                        for (bo in BountyRegistry.items) {
+                        for (bo in BountyRegistry.content) {
                             sender.sendMessage(bo.toString())
                         }
                     }
 
                 }
-                "rewards" -> {
+                "rewardPools" -> {
                     if (hasBasicPerms(sender)) {
                         sender.sendMessage("§6Rewards:")
-                        for (re in RewardRegistry.items) {
+                        for (re in RewardRegistry.content) {
                             sender.sendMessage(re.toString())
                         }
                     }
@@ -91,7 +91,7 @@ class BountyCommand : ICommand {
                             }
                         }
 
-                        if (BountyRegistry.items.size < Bountiful.config.bountyAmountRange.last) {
+                        if (BountyRegistry.content.size < Bountiful.config.bountyAmountRange.last) {
                             sender.sendTranslation("bountiful.toofew.bounties")
                             BountyRegistry.restore(bountyBackup)
                         }

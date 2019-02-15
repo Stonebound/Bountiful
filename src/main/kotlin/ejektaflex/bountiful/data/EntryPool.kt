@@ -1,8 +1,13 @@
 package ejektaflex.bountiful.data
 
 import ejektaflex.bountiful.api.data.IEntryPool
-import ejektaflex.bountiful.api.logic.picked.IPickedEntry
+import ejektaflex.bountiful.registry.EntryRegistry
 
-class EntryPool(override val id: String, override val entries: MutableList<IPickedEntry> = mutableListOf()) : IEntryPool {
+class EntryPool(override val id: String) : EntryRegistry(), IEntryPool {
+
+    enum class EnumPoolType {
+        OBJECTIVE,
+        REWARD
+    }
 
 }

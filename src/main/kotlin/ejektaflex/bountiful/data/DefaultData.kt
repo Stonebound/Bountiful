@@ -8,6 +8,53 @@ import ejektaflex.bountiful.registry.ValueRegistry
 
 object DefaultData {
 
+    val decrees = ValueRegistry<Decree>().apply {
+        add(
+                Decree(
+                        "Village Rations: Food",
+                        "The people are in need of food!",
+                        "food",
+                        spawnsInBoard = true,
+                        objectivePools = mutableListOf(
+                                "vanilla_food_bounties"
+                        ),
+                        rewardPools = mutableListOf(
+                                "vanilla_food_rewards",
+                                "money_rewards"
+                        )
+                )
+        )
+    }
+
+    val pools = ValueRegistry<EntryPool>().apply {
+        add(
+                EntryPool("vanilla_food_bounties").apply {
+                    add(
+                            PickedEntry("minecraft:fish", 80, amountRange = (2..32).ir),
+                            PickedEntry("minecraft:apple", 70, amountRange = (2..32).ir),
+                            PickedEntry("minecraft:bread", 60, amountRange = (1..12).ir),
+                            PickedEntry("minecraft:sugar", 55, amountRange = (1..64).ir),
+                            PickedEntry("minecraft:wheat", 20, amountRange = (1..48).ir)
+                    )
+                },
+
+                EntryPool("vanilla_food_rewards").apply {
+                    add(
+                            PickedEntry("minecraft:cake", 200, amountRange = (1..3).ir),
+                            PickedEntry("minecraft:baked_potato", 120, amountRange = (4..24).ir)
+                    )
+                },
+
+                EntryPool("money_rewards").apply {
+                    add(
+                            PickedEntryStack(PickedEntry("minecraft:gold_nugget", 100)),
+                            PickedEntryStack(PickedEntry("minecraft:gold_ingot", 900))
+                    )
+                }
+
+        )
+    }
+
     val entries = ValueRegistry<PickedEntry>().apply {
         add(
             PickedEntry("minecraft:dirt", 5, amountRange = (16..128).ir),

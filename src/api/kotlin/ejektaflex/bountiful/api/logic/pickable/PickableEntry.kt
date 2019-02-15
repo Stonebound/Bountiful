@@ -2,8 +2,8 @@ package ejektaflex.bountiful.api.logic.pickable
 
 import com.google.gson.annotations.SerializedName
 import ejektaflex.bountiful.api.data.IHasTag
-import ejektaflex.bountiful.api.data.IValidatable
-import ejektaflex.bountiful.api.data.IWeighted
+import ejektaflex.bountiful.api.generic.IValidatable
+import ejektaflex.bountiful.api.generic.IWeighted
 import ejektaflex.bountiful.api.logic.IPickCommon
 import ejektaflex.bountiful.api.logic.IStageRequirement
 import ejektaflex.bountiful.api.logic.ItemRange

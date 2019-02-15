@@ -1,8 +1,9 @@
 package ejektaflex.bountiful.api.logic.picked
 
-import ejektaflex.bountiful.api.data.IValidatable
-import ejektaflex.bountiful.api.data.IWeighted
+import ejektaflex.bountiful.api.generic.IValidatable
+import ejektaflex.bountiful.api.generic.IWeighted
 import ejektaflex.bountiful.api.logic.IPickCommon
+import ejektaflex.bountiful.api.logic.ItemRange
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.INBTSerializable
 
@@ -37,5 +38,10 @@ interface IPickedEntry : INBTSerializable<NBTTagCompound>, IPickCommon, IValidat
      * A multiplier for how long this item gets to complete.
      */
     fun timeMult(): Double
+
+    var amountRange: ItemRange?
+
+    val minValueOfPick: Int
+        get() = unitWorth * (amountRange?.min ?: 1)
 
 }

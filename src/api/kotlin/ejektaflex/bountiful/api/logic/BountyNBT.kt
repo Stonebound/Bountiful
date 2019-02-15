@@ -10,5 +10,5 @@ enum class BountyNBT(var key: String) {
     Worth("worth"),
     BountyStamp("bountyStamp"),
     ToGet("gets"),
-    Rewards("rewards");
+    Rewards("rewardPools");
 }

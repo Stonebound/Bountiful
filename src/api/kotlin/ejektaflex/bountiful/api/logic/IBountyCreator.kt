@@ -7,7 +7,7 @@ import net.minecraft.world.World
 
 interface IBountyCreator {
     /**
-     * Creates a new, randomized bounty. If there are no valid rewards available, returns null instead.
+     * Creates a new, randomized bounty. If there are no valid rewardPools available, returns null instead.
      */
     fun createStack(world: World, rarity: EnumBountyRarity? = null): ItemStack?
 

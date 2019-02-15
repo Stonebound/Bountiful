@@ -1,11 +1,15 @@
 package ejektaflex.bountiful.api.data
 
+import ejektaflex.bountiful.api.generic.IUniqueId
 import ejektaflex.bountiful.api.logic.picked.IPickedEntry
 
-interface IDecree {
+interface IDecree : IUniqueId {
     val decreeTitle: String
+    val isGreedy: Boolean
     val decreeDescription: String
     val spawnsInBoard: Boolean
-    val objectives: MutableList<IPickedEntry>
-    val rewards: MutableList<IPickedEntry>
+    val objectivePools: MutableList<String>
+    val rewardPools: MutableList<String>
+    val objectives: List<IPickedEntry>
+    val rewards: List<IPickedEntry>
 }
