@@ -1,6 +1,7 @@
-import net.minecraftforge.gradle.user.patcherUser.forge.ForgeExtension
+import net.minecraftforge.gradle.patcher.PatcherExtension
 import org.gradle.language.jvm.tasks.ProcessResources
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import net.minecraftforge.gradle.userdev.UserDevExtension
 
 val v_forge = "1.12.2-14.23.5.2768"
 val v_forgelin = "1.8.2"
@@ -14,12 +15,22 @@ val v_bookshelf = "2.3.557"
 buildscript {
     repositories {
         jcenter()
-        maven("http://files.minecraftforge.net/maven")
+        mavenCentral()
+        maven("https://files.minecraftforge.net/maven")
     }
     dependencies {
-        classpath("net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT")
+
     }
 }
+
+
+plugins {
+    java
+    idea
+    kotlin("jvm")  version "1.3.10"
+    id("net.minecraftforge.gradle")
+}
+
 
 val bouVersion: String
     get() {
@@ -39,22 +50,17 @@ base {
     archivesBaseName = "Bountiful"
 }
 
-plugins {
-    java
-    idea
-    kotlin("jvm") version "1.3.10"
-    id("net.minecraftforge.gradle.forge") version "2.0.2"
-}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-minecraft {
-    setUseDepAts(true)
+val minecraft: UserDevExtension by extensions
+minecraft.apply {
+    //setUseDepAts(true)
     version = v_forge
-    runDir = "run"
+    //runDir = "run"
     mappings = "stable_39"
 }
 
@@ -73,8 +79,8 @@ repositories {
 dependencies {
     subprojects.forEach { compile(it) }
     api("net.shadowfacts:Forgelin:$v_forgelin")
-    deobfProvided("mezz.jei:jei_$v_minecraft:$v_jei:api")
-    runtime("mezz.jei:jei_$v_minecraft:$v_jei")
+    //deobfProvided("mezz.jei:jei_$v_minecraft:$v_jei:api")
+    //runtime("mezz.jei:jei_$v_minecraft:$v_jei")
 
     compileOnly(files("libonly/GameStages-$v_minecraft-$v_gamestages-deobf.jar"))
     compileOnly("net.darkhax.bookshelf:Bookshelf-$v_minecraft:$v_bookshelf:deobf")
@@ -89,7 +95,7 @@ tasks.withType<KotlinCompile> {
 tasks.withType<ProcessResources> {
     from(sourceSets["main"].resources.srcDirs) {
         include("mcmod.info")
-        expand(mapOf("version" to project.version, "mcversion" to project.minecraft.version))
+        expand(mapOf("version" to project.version, "mcversion" to v_forge))
     }
     from(sourceSets["main"].resources.srcDirs) {
         exclude("mcmod.info")
@@ -99,13 +105,15 @@ tasks.withType<ProcessResources> {
 // This part may be messy
 tasks.withType<Jar> {
     //from(sourceSets["main"].output)
-    from(sourceSets["api"].output.classesDirs)
+    //println("names")
+    //println(sourceSets.names)
+    //from(sourceSets["api"].output.classesDirs)
 }
 
 tasks.register<Jar>("apiJar") {
-    classifier = "api"
-    from(sourceSets["api"].output)
-    from(sourceSets["api"].allJava)
+    //classifier = "api"
+    //from(sourceSets["api"].output)
+    //from(sourceSets["api"].allJava)
 }
 
 val compileKotlin: KotlinCompile by tasks
