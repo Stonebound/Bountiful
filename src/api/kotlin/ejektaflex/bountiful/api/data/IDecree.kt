@@ -8,6 +8,7 @@ interface IDecree : IUniqueId {
     val isGreedy: Boolean
     val decreeDescription: String
     val spawnsInBoard: Boolean
+    val spawnsInWorld: Boolean
     val objectivePools: MutableList<String>
     val rewardPools: MutableList<String>
     val objectives: List<IPickedEntry>

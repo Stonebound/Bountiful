@@ -9,6 +9,7 @@ class Decree(
         override val decreeDescription: String = "UNKNOWN_DESC",
         override val id: String = "unknown",
         override val spawnsInBoard: Boolean = false,
+        override val spawnsInWorld: Boolean = true,
         override val isGreedy: Boolean = false,
         override val objectivePools: MutableList<String> = mutableListOf(),
         override val rewardPools: MutableList<String> = mutableListOf()
