@@ -9,14 +9,20 @@ import ejektaflex.bountiful.cap.IGlobalBoard
 import ejektaflex.bountiful.logic.BountyHolder
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.tileentity.TileEntityType
 import net.minecraftforge.items.CapabilityItemHandler
 import net.minecraft.util.EnumFacing
 import net.minecraftforge.common.capabilities.Capability
+import net.minecraftforge.common.util.LazyOptional
 import net.minecraftforge.items.ItemStackHandler
+import java.lang.reflect.Type
+import java.util.function.Supplier
 import kotlin.math.max
 
 
-class TileEntityBountyBoard : TileEntity(), ITileEntityBountyBoard {
+class TileEntityBountyBoard : TileEntity(
+        TileEntityType.CHEST // TODO Create TileEntity type
+), ITileEntityBountyBoard {
 
     private val internalInv = BountyHolder(ItemStackHandler(numSlots))
 
@@ -24,12 +30,12 @@ class TileEntityBountyBoard : TileEntity(), ITileEntityBountyBoard {
         get() = !Bountiful.config.globalBounties
 
     private val cap: IGlobalBoard?
-        get() = world.getCapability(CapManager.CAP_BOARD!!, null)
+        get() = world.getCapability(CapManager.CAP_BOARD!!, null).orElse(null)
 
     override val inventory: BountyHolder
         get() {
             return if (!isLocalBounties) {
-                if (world.hasCapability(CapManager.CAP_BOARD!!, null)) {
+                if (world.getCapability(CapManager.CAP_BOARD!!, null).isPresent) {
                     cap!!.holder
                 } else {
                     internalInv
@@ -43,23 +49,24 @@ class TileEntityBountyBoard : TileEntity(), ITileEntityBountyBoard {
 
     var pulseLeft = 0
 
-    override fun writeToNBT(tag: NBTTagCompound): NBTTagCompound {
+
+    override fun write(tag: NBTTagCompound): NBTTagCompound {
         if (isLocalBounties) {
             tag.clear()
             tag.setTag("inv", inventory.handler.serializeNBT())
             tag.setBoolean("newBoard", newBoard)
-            tag.setInteger("pulseLeft", pulseLeft)
+            tag.setInt("pulseLeft", pulseLeft)
         }
-        return super.writeToNBT(tag)
+        return super.write(tag)
     }
 
-    override fun readFromNBT(tag: NBTTagCompound) {
+    override fun read(tag: NBTTagCompound) {
         if (isLocalBounties) {
-            inventory.handler.deserializeNBT(tag.getCompoundTag("inv"))
+            inventory.handler.deserializeNBT(tag.getTag("inv") as NBTTagCompound)
             newBoard = tag.getBoolean("newBoard")
-            pulseLeft = tag.getInteger("pulseLeft")
+            pulseLeft = tag.getInt("pulseLeft")
         }
-        super.readFromNBT(tag)
+        super.read(tag)
     }
 
     private fun updatePulse() {
@@ -67,7 +74,7 @@ class TileEntityBountyBoard : TileEntity(), ITileEntityBountyBoard {
         pulseLeft = max(pulseLeft - 1, 0)
         if (pulseLeft != oldPulse) {
             val blockstate = world.getBlockState(pos)
-            world.notifyNeighborsOfStateChange(pos, blockstate.block, true)
+            world.notifyNeighborsOfStateChange(pos, blockstate.block)
             //world.notifyBlockUpdate(pos, blockstate, blockstate, 0b111)
         }
     }
@@ -77,7 +84,7 @@ class TileEntityBountyBoard : TileEntity(), ITileEntityBountyBoard {
         updatePulse()
     }
 
-    override fun update() {
+    override fun tick() {
         if (!world.isRemote && isLocalBounties) {
             // Skip placement update tick
             if (newBoard) {
@@ -95,15 +102,20 @@ class TileEntityBountyBoard : TileEntity(), ITileEntityBountyBoard {
         }
     }
 
+    // No more hasCapability
+    /*
     override fun hasCapability(capability: Capability<*>, facing: EnumFacing?): Boolean {
         return capability === CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing)
     }
+    */
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> getCapability(capability: Capability<T>, facing: EnumFacing?): T? {
-        return if (capability === CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) inventory.handler as T else {
-            super.getCapability<T>(capability, facing)
-        }
+    override fun <T> getCapability(capability: Capability<T>, facing: EnumFacing?): LazyOptional<T> {
+        return LazyOptional.of {
+            if (capability === CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) inventory.handler else {
+                super.getCapability<T>(capability, facing)
+            }
+        } as LazyOptional<T>
     }
 
     companion object {

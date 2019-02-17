@@ -30,7 +30,7 @@ object BountyCreator : IBountyCreator {
 
     override fun calcRarity(): EnumBountyRarity {
         var level = 0
-        val chance = Bountiful.config.rarityChance
+        val chance = 0.27
         for (i in 0 until 3) {
             if (rand.nextFloat() < chance) {
                 level += 1
@@ -45,8 +45,8 @@ object BountyCreator : IBountyCreator {
         if (RewardRegistry.validRewards(world).isEmpty()) {
             throw BountyCreationException("There are no valid rewards in the reward registry!")
         }
-        if (BountyRegistry.validBounties(world).size < Bountiful.config.bountyAmountRange.last) {
-            throw BountyCreationException("There are not enough valid bounties in the bounty registry! (At least ${Bountiful.config.bountyAmountRange} must be valid at any one time).")
+        if (BountyRegistry.validBounties(world).size < 2) { // Bountiful.config.bountyAmountRange.last
+            throw BountyCreationException("There are not enough valid bounties in the bounty registry! (At least 2 must be valid at any one time).")
         }
     }
 
@@ -57,7 +57,9 @@ object BountyCreator : IBountyCreator {
         // Shuffle bounty registry and take a random number of bounty items
         val pickedAlready = mutableListOf<PickableEntry>()
 
-        val toPick = Bountiful.config.bountyAmountRange.random()
+        // TODO Get config working
+        //val toPick = Bountiful.config.bountyAmountRange.random()
+        val toPick = 2
         while (pickedAlready.size < toPick) {
             val pool = BountyRegistry.validBounties(world).filter { it !in pickedAlready }
             val toAdd = pool.weightedRandom
@@ -80,7 +82,8 @@ object BountyCreator : IBountyCreator {
                 }
             }
 
-            bountyTime = max((preBountyTime * Bountiful.config.timeMultiplier).toLong(), Bountiful.config.bountyTimeMin.toLong())
+            //bountyTime = max((preBountyTime * Bountiful.config.timeMultiplier).toLong(), Bountiful.config.bountyTimeMin.toLong())
+            bountyTime = 20000L
 
             // Make worth affected by rarity
             worth = (worth * EnumBountyRarity.getRarityFromInt(rarity).bountyMult).toInt()
@@ -99,11 +102,14 @@ object BountyCreator : IBountyCreator {
     }
 
     override fun create(world: World, inRarity: EnumBountyRarity?): BountyData? {
+        /*
         return if (Bountiful.config.randomBounties) {
             createRandomBounty(world, inRarity)
         } else {
             createPremadeBounty(inRarity)
         }
+        */
+        return createRandomBounty(world, inRarity)
     }
 
     private fun findRewards(world: World, n: Int): List<PickedEntryStack> {
@@ -113,10 +119,13 @@ object BountyCreator : IBountyCreator {
         var validRewards: List<PickedEntryStack> = RewardRegistry.validRewards(world, worthLeft, picked)
 
         while (validRewards.isNotEmpty()) {
+            val reward = validRewards.last()
+            /*
             val reward = when (Bountiful.config.greedyRewards) {
                 true -> validRewards.last()
                 false -> validRewards.weightedRandom
             }
+            */
 
             val maxNumCouldGive = (worthLeft / reward.amount)
             val numCanGive = maxNumCouldGive.let {

@@ -1,4 +1,4 @@
-package ejektaflex.bountiful.proxy
+package ejektaflex.bountiful.dist
 
 import net.minecraftforge.eventbus.api.Event
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent

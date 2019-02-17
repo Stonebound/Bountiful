@@ -2,13 +2,17 @@ package ejektaflex.bountiful.config
 
 import ejektaflex.bountiful.api.config.IBountifulConfig
 import ejektaflex.bountiful.api.ext.clampTo
-import net.minecraftforge.fml.common.Loader
+import net.minecraftforge.fml.ModList
 import java.io.File
 import kotlin.math.max
 
 
 
-data class ConfigFile(val folder: File) : KConfig(folder, "bountiful.cfg"), IBountifulConfig {
+data class ConfigFile(val folder: File) : IBountifulConfig {
+
+    override fun load() {
+        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override var maxBountiesPerBoard: Int = 17
         private set
@@ -61,8 +65,9 @@ data class ConfigFile(val folder: File) : KConfig(folder, "bountiful.cfg"), IBou
         get() = bountyAmountMin..bountyAmountMax
 
     val isRunningGameStages: Boolean
-        get() = compatGameStages && Loader.isModLoaded("gamestages")
+        get() = compatGameStages && ModList.get().isLoaded("gamestages")
 
+    /*
     override fun load() {
 
         maxBountiesPerBoard = config.get(
@@ -248,7 +253,11 @@ data class ConfigFile(val folder: File) : KConfig(folder, "bountiful.cfg"), IBou
                 "A multiplier for how much an epic bounty is worth (Default: 1.5)"
         ).double.clampTo(0.01, Double.MAX_VALUE)
 
+
+
     }
+    */
+
 
     companion object {
         private const val CATEGORY_BOARD = "board"

@@ -1,5 +1,5 @@
 package ejektaflex.bountiful.command
-
+/*
 import ejektaflex.bountiful.Bountiful
 import ejektaflex.bountiful.api.enum.EnumBountyRarity
 import ejektaflex.bountiful.config.BountifulIO
@@ -155,3 +155,4 @@ class BountyCommand : ICommand {
 
 }
 
+*/

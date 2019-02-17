@@ -1,8 +1,8 @@
 package ejektaflex.bountiful.config
 
-import net.minecraftforge.common.config.Configuration
 import java.io.File
 
+/*
 open class KConfig(folder: File, fileName: String) {
     protected var config: Configuration = Configuration(File(folder, fileName))
 
@@ -11,3 +11,4 @@ open class KConfig(folder: File, fileName: String) {
 
     open fun hasChanged() = config.hasChanged()
 }
+        */

@@ -25,7 +25,10 @@ import kotlin.math.max
 class BountyData : IBountyData {
 
     // 72000 = 1 hour IRL
-    override var boardStamp = Bountiful.config.boardLifespan
+    // TODO Reimplement config option
+    //override var boardStamp = Bountiful.config.boardLifespan
+    override var boardStamp = 6000
+
     override var bountyTime = 0L
     override var rarity = 0
     override val toGet = ValueRegistry<IPickedEntry>()
@@ -37,7 +40,7 @@ class BountyData : IBountyData {
         return if (bountyStamp == null) {
             bountyTime
         } else {
-            max(bountyStamp!! + bountyTime - world.totalWorldTime, 0)
+            max(bountyStamp!! + bountyTime - world.gameTime, 0)
         }
     }
 
@@ -46,12 +49,12 @@ class BountyData : IBountyData {
     }
 
     override fun boardTimeLeft(world: World): Long {
-        return max(boardStamp + Bountiful.config.boardLifespan - world.totalWorldTime , 0)
+        return max(boardStamp + Bountiful.config.boardLifespan - world.gameTime , 0).toLong()
     }
 
     fun tooltipInfo(world: World, advanced: Boolean): List<String> {
         if (Bountiful.config.isRunningGameStages) {
-            val localPlayer = Minecraft.getMinecraft().player
+            val localPlayer = Minecraft.getInstance().player
             if (FacadeGameStages.stagesStillNeededFor(localPlayer, this).isNotEmpty()) {
                 return listOf(I18n.format("bountiful.tooltip.requirements"))
             }
@@ -83,10 +86,13 @@ class BountyData : IBountyData {
         return if (allGets.isEmpty()) {
             listOf()
         } else {
-            val itemIndex = (world.totalWorldTime % (allGets.size * cycleLength)) / cycleLength
+            val itemIndex = (world.gameTime % (allGets.size * cycleLength)) / cycleLength
             val itemToShow = allGets[itemIndex.toInt()]
             val istack = (itemToShow.first as PickedEntryStack).itemStack!!
-            listOf(itemToShow.second) + istack.getTooltip(null) { false } + (istack.modOriginName?.let { listOf("§9§o$it§r") } ?: listOf<String>())
+            val la = listOf(itemToShow.second)
+            val lb = istack.getTooltip(null) { false }
+            val lc = istack.modOriginName?.let { listOf("§9§o$it§r") } ?: listOf()
+            return la + lb.map { it.unformattedComponentText } + lc
         }
     }
 
@@ -130,10 +136,10 @@ class BountyData : IBountyData {
     }
 
     override fun deserializeNBT(tag: NBTTagCompound) {
-        boardStamp = tag.getInteger(BountyNBT.BoardStamp.key)
+        boardStamp = tag.getInt(BountyNBT.BoardStamp.key)
         bountyTime = tag.getLong(BountyNBT.BountyTime.key)
-        rarity = tag.getInteger(BountyNBT.Rarity.key)
-        worth = tag.getInteger(BountyNBT.Worth.key)
+        rarity = tag.getInt(BountyNBT.Rarity.key)
+        worth = tag.getInt(BountyNBT.Worth.key)
         if (tag.hasKey(BountyNBT.BountyStamp.key)) {
             bountyStamp = tag.getLong(BountyNBT.BountyStamp.key)
         }
@@ -146,10 +152,10 @@ class BountyData : IBountyData {
 
     override fun serializeNBT(): NBTTagCompound {
         return NBTTagCompound().apply {
-            setInteger(BountyNBT.BoardStamp.key, boardStamp)
+            setInt(BountyNBT.BoardStamp.key, boardStamp)
             setLong(BountyNBT.BountyTime.key, bountyTime)
-            setInteger(BountyNBT.Rarity.key, rarity)
-            setInteger(BountyNBT.Worth.key, worth)
+            setInt(BountyNBT.Rarity.key, rarity)
+            setInt(BountyNBT.Worth.key, worth)
             bountyStamp?.let { setLong(BountyNBT.BountyStamp.key, it) }
             setUnsortedList(BountyNBT.ToGet.key, toGet.items.toSet())
             setUnsortedList(BountyNBT.Rewards.key, rewards.items.toSet())

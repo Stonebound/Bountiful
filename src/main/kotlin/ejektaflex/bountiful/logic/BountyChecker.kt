@@ -1,7 +1,6 @@
 package ejektaflex.bountiful.logic
 
 import ejektaflex.bountiful.api.ext.registryName
-import ejektaflex.bountiful.api.ext.sendTranslation
 import ejektaflex.bountiful.api.logic.picked.PickedEntryEntity
 import ejektaflex.bountiful.api.logic.picked.PickedEntryStack
 import ejektaflex.bountiful.data.BountyData
@@ -39,7 +38,7 @@ object BountyChecker {
             val stacksMatching = prereqItems.filter { validStackCheck(it, picked.itemStack!!) }
             val hasEnough = stacksMatching.sumBy { it.count } >= picked.amount
             if (!hasEnough) {
-                player.sendTranslation("bountiful.cannot.fulfill")
+                //player.sendTranslation("bountiful.cannot.fulfill")
             }
             hasEnough
         }
@@ -84,7 +83,7 @@ object BountyChecker {
                 }
             }
         }
-        bounty.tagCompound = data.serializeNBT()
+        bounty.tag = data.serializeNBT()
     }
 
     fun hasEntitiesFulfilled(data: BountyData): Boolean {

@@ -2,13 +2,11 @@ package ejektaflex.bountiful.worldgen
 
 import ejektaflex.bountiful.Bountiful
 import net.minecraft.util.EnumFacing
-import net.minecraft.world.gen.structure.StructureComponent
-import net.minecraft.world.gen.structure.StructureVillagePieces
 import net.minecraftforge.fml.common.registry.VillagerRegistry
 import java.util.*
 
-
-
+// TODO Reimplement Village Board Creation Handler
+/*
 class VillageBoardCreationHandler : VillagerRegistry.IVillageCreationHandler {
     override fun buildComponent(villagePiece: StructureVillagePieces.PieceWeight?, startPiece: StructureVillagePieces.Start?, pieces: MutableList<StructureComponent>?, random: Random?, x: Int, y: Int, z: Int, facing: EnumFacing?, type: Int): StructureVillagePieces.Village? {
         return VillageBoardComponent.buildComponent(villagePiece, startPiece, pieces, random, x, y, z, facing, type)
@@ -25,3 +23,5 @@ class VillageBoardCreationHandler : VillagerRegistry.IVillageCreationHandler {
     }
 
 }
+        */
+

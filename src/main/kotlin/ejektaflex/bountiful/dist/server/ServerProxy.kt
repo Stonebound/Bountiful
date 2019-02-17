@@ -1,7 +1,6 @@
 package ejektaflex.bountiful.dist.server
 
 import ejektaflex.bountiful.Bountiful
-import ejektaflex.bountiful.api.stats.BountifulStats
 import ejektaflex.bountiful.cap.GlobalBoard
 import ejektaflex.bountiful.cap.IGlobalBoard
 import ejektaflex.bountiful.cap.Storage
@@ -10,7 +9,6 @@ import ejektaflex.bountiful.data.DefaultData
 import ejektaflex.bountiful.dist.ISidedProxy
 import ejektaflex.bountiful.registry.BountyRegistry
 import ejektaflex.bountiful.registry.RewardRegistry
-import ejektaflex.bountiful.worldgen.VillageBoardCreationHandler
 import net.minecraftforge.common.capabilities.CapabilityManager
 import net.minecraftforge.fml.common.registry.VillagerRegistry
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
@@ -20,7 +18,7 @@ class ServerProxy : ISidedProxy {
 
     override val setupCommonEvent = { event: FMLCommonSetupEvent ->
         CapabilityManager.INSTANCE.register(IGlobalBoard::class.java, Storage()) { GlobalBoard() }
-        VillagerRegistry.instance().registerVillageCreationHandler(VillageBoardCreationHandler())
+        //VillagerRegistry.instance().registerVillageCreationHandler(VillageBoardCreationHandler())
         //MapGenStructureIO.registerStructureComponent(VillageBoardComponent::class.java, VillageBoardComponent.VILLAGE_BOARD_ID.toString())
     }
 
@@ -48,7 +46,7 @@ class ServerProxy : ISidedProxy {
             }
         }
 
-        BountifulStats.register()
+        //BountifulStats.register()
 
         println("Bounties: ${BountyRegistry.items.size}")
         BountyRegistry.items.forEach { println(it) }

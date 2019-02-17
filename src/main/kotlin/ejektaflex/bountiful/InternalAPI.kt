@@ -33,7 +33,7 @@ object InternalAPI : IBountifulAPI {
     }
 
     override fun dataToStack(data: IBountyData): ItemStack {
-        return ItemStack(ContentRegistry.bounty).apply { this.tagCompound = data.serializeNBT() }
+        return ItemStack(ContentRegistry.bounty).apply { this.tag = data.serializeNBT() }
     }
 
     override val config: IBountifulConfig

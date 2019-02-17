@@ -18,34 +18,38 @@ class ContainerBoard(playerInv: InventoryPlayer, boardTE: TileEntityBountyBoard)
     init {
         val inventory = boardTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH)
 
-        for (j in 0 until 3) {
-            for (k in 0 until 9) {
-                addSlot(object : SlotItemHandler(inventory, k + j * 9, 8 + k * 18, 18 + j * 18) {
-                    override fun onSlotChanged() {
-                        boardTE.markDirty()
-                    }
-
-                    // The only valid items are ItemBounty with valid BountyData.
-                    override fun isItemValid(stack: ItemStack): Boolean {
-                        return if (stack.item is ItemBounty) {
-                            return BountyData.isValidBounty(stack)
-                        } else {
-                            false
+        if (inventory.isPresent) {
+            for (j in 0 until 3) {
+                for (k in 0 until 9) {
+                    addSlot(object : SlotItemHandler(inventory.orElse(null), k + j * 9, 8 + k * 18, 18 + j * 18) {
+                        override fun onSlotChanged() {
+                            boardTE.markDirty()
                         }
-                    }
-                })
+
+                        // The only valid items are ItemBounty with valid BountyData.
+                        override fun isItemValid(stack: ItemStack): Boolean {
+                            return if (stack.item is ItemBounty) {
+                                return BountyData.isValidBounty(stack)
+                            } else {
+                                false
+                            }
+                        }
+                    })
+                }
+            }
+
+            for (j in 0..2) {
+                for (k in 0..8) {
+                    this.addSlot(Slot(playerInv, k + j * 9 + 9, 8 + k * 18, 103 + j * 18 - 19))
+                }
+            }
+
+            for (i1 in 0..8) {
+                this.addSlot(Slot(playerInv, i1, 8 + i1 * 18, 142))
             }
         }
 
-        for (j in 0..2) {
-            for (k in 0..8) {
-                this.addSlot(Slot(playerInv, k + j * 9 + 9, 8 + k * 18, 103 + j * 18 - 19))
-            }
-        }
 
-        for (i1 in 0..8) {
-            this.addSlot(Slot(playerInv, i1, 8 + i1 * 18, 142))
-        }
 
     }
 

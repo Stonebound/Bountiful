@@ -6,14 +6,11 @@ import net.minecraft.util.EnumFacing
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.minecraft.world.gen.structure.StructureBoundingBox
-import net.minecraft.world.gen.structure.StructureComponent
-import net.minecraft.world.gen.structure.StructureVillagePieces
-import net.minecraft.world.gen.structure.template.PlacementSettings
-import net.minecraft.world.gen.structure.template.Template
-import net.minecraft.world.gen.structure.template.TemplateManager
+import net.minecraft.world.gen.feature.template.PlacementSettings
 import java.util.Random
 
+// TODO Reimplement Village Generation
+/*
 class VillageBoardComponent : StructureVillagePieces.Village {
 
     // Blank default to make Forge happy
@@ -51,3 +48,4 @@ class VillageBoardComponent : StructureVillagePieces.Village {
         }
     }
 }
+*/

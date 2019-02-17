@@ -4,13 +4,10 @@ import ejektaflex.bountiful.Bountiful
 import ejektaflex.bountiful.api.BountifulAPI
 import ejektaflex.bountiful.api.data.IBountyData
 import ejektaflex.bountiful.api.enum.EnumBountyRarity
-import ejektaflex.bountiful.api.ext.sendMessage
-import ejektaflex.bountiful.api.ext.sendTranslation
 import ejektaflex.bountiful.api.item.IItemBounty
 import ejektaflex.bountiful.api.logic.BountyNBT
 import ejektaflex.bountiful.logic.BountyChecker
 import ejektaflex.bountiful.logic.BountyCreator
-import ejektaflex.bountiful.api.stats.BountifulStats
 import ejektaflex.bountiful.data.BountyData
 import ejektaflex.bountiful.logic.error.BountyCreationException
 import ejektaflex.compat.FacadeGameStages
@@ -23,59 +20,64 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
 import net.minecraft.util.EnumHand
+import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.TextComponentString
 import net.minecraft.world.World
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
-import org.lwjgl.input.Keyboard
+import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.api.distmarker.OnlyIn
 
 
-class ItemBounty : Item(), IItemBounty {
+class ItemBounty(builder: Item.Properties) : Item(builder), IItemBounty {
 
-    @SideOnly(Side.CLIENT)
-    override fun addInformation(stack: ItemStack, worldIn: World?, tooltip: MutableList<String>, flagIn: ITooltipFlag) {
-        if (stack.hasTagCompound()) {
-            val bounty = BountyData().apply { deserializeNBT(stack.tagCompound!!) }
-            val bountyTipInfo = bounty.tooltipInfo(worldIn!!, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+    override fun getTranslationKey() = "bountiful.bounty"
+
+    @OnlyIn(Dist.CLIENT)
+    override fun addInformation(stack: ItemStack, worldIn: World?, tooltip: MutableList<ITextComponent>, flagIn: ITooltipFlag) {
+        if (stack.hasTag()) {
+            val bounty = BountyData().apply { deserializeNBT(stack.tag!!) }
+            // TODO Reimplement advanced bounty tooltips
+            //val bountyTipInfo = bounty.tooltipInfo(worldIn!!, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+            val bountyTipInfo = bounty.tooltipInfo(worldIn!!, false)
             for (line in bountyTipInfo) {
-                tooltip.add(line)
+                tooltip.add(TextComponentString(line))
             }
         }
     }
 
     override fun getBountyData(stack: ItemStack): BountyData {
-        if (stack.hasTagCompound() && stack.item is ItemBounty) {
-            return BountyData().apply { deserializeNBT(stack.tagCompound!!) }
+        if (stack.hasTag() && stack.item is ItemBounty) {
+            return BountyData().apply { deserializeNBT(stack.tag!!) }
         } else {
             throw Exception("${stack.displayName} is not an ItemBounty or has no NBT data!")
         }
     }
 
     override fun getRarity(stack: ItemStack): EnumRarity {
-        return if (stack.hasTagCompound() && stack.tagCompound!!.hasKey(BountyNBT.Rarity.key)) {
-            EnumBountyRarity.getRarityFromInt(stack.tagCompound!!.getInteger(BountyNBT.Rarity.key)).itemRarity
+        return if (stack.hasTag() && stack.tag!!.hasKey(BountyNBT.Rarity.key)) {
+            EnumBountyRarity.getRarityFromInt(stack.tag!!.getInt(BountyNBT.Rarity.key)).itemRarity
         } else {
             super.getRarity(stack)
         }
     }
 
     private fun tickNumber(stack: ItemStack, amount: Int, key: String): Boolean {
-        if (stack.hasTagCompound() && stack.tagCompound!!.hasKey(key)) {
-            var time = stack.tagCompound!!.getInteger(key)
+        if (stack.hasTag() && stack.tag!!.hasKey(key)) {
+            var time = stack.tag!!.getInt(key)
             if (time > 0) {
                 time -= amount
             }
             if (time < 0) {
                 time = 0
             }
-            stack.tagCompound!!.setInteger(key, time)
+            stack.tag!!.setInt(key, time)
             return (time <= 0)
         }
         return true
     }
 
     override fun tryExpireBountyTime(stack: ItemStack) {
-        if (stack.hasTagCompound() && stack.tagCompound!!.hasKey(BountyNBT.BountyTime.key)) {
-            stack.tagCompound!!.setInteger(BountyNBT.BountyTime.key, 0)
+        if (stack.hasTag() && stack.tag!!.hasKey(BountyNBT.BountyTime.key)) {
+            stack.tag!!.setInt(BountyNBT.BountyTime.key, 0)
         }
     }
 
@@ -83,6 +85,8 @@ class ItemBounty : Item(), IItemBounty {
         return tickNumber(stack, BountyData.boardTickFreq.toInt(), BountyNBT.BoardStamp.key)
     }
 
+    // TODO Reimplement Bounty ItemStack display name
+    /*
     override fun getItemStackDisplayName(stack: ItemStack): String {
         return super.getItemStackDisplayName(stack) + if (stack.hasTagCompound() && stack.tagCompound!!.hasKey(BountyNBT.Rarity.key)) {
             val rarity = EnumBountyRarity.getRarityFromInt(stack.tagCompound!!.getInteger(BountyNBT.Rarity.key))
@@ -92,18 +96,22 @@ class ItemBounty : Item(), IItemBounty {
             ""
         }
     }
+    */
 
     fun ensureTimerStarted(stack: ItemStack, worldIn: World) {
-        if (stack.item is ItemBounty && stack.hasTagCompound() && !stack.tagCompound!!.hasKey(BountyNBT.BountyStamp.key)) {
-            stack.tagCompound!!.setLong(BountyNBT.BountyStamp.key, worldIn.totalWorldTime)
+        if (stack.item is ItemBounty && stack.hasTag() && !stack.tag!!.hasKey(BountyNBT.BountyStamp.key)) {
+            stack.tag!!.setLong(BountyNBT.BountyStamp.key, worldIn.gameTime)
         }
     }
 
+    // TODO Reimplement bounty item updates
+    /*
     override fun onUpdate(stack: ItemStack, worldIn: World, entityIn: Entity?, itemSlot: Int, isSelected: Boolean) {
-        if (worldIn.totalWorldTime % BountyData.bountyTickFreq == 1L) {
+        if (worldIn.gameTime % BountyData.bountyTickFreq == 1L) {
             ensureTimerStarted(stack, worldIn)
         }
     }
+    */
 
     override fun ensureBounty(stack: ItemStack, worldIn: World, rarity: EnumBountyRarity?) {
         val data = try {
@@ -112,11 +120,11 @@ class ItemBounty : Item(), IItemBounty {
             return
         }
         if (stack.item is ItemBounty) {
-            if (!stack.hasTagCompound()) {
+            if (!stack.hasTag()) {
                 if (data != null) {
-                    stack.tagCompound = data.serializeNBT().apply {
+                    stack.tag = data.serializeNBT().apply {
                         this.removeTag(BountyNBT.BountyStamp.key)
-                        this.setLong(BountyNBT.BoardStamp.key, worldIn.totalWorldTime)
+                        this.setLong(BountyNBT.BoardStamp.key, worldIn.gameTime)
                     }
                 }
             }
@@ -128,22 +136,22 @@ class ItemBounty : Item(), IItemBounty {
     // Used to cash in the bounty for a reward
     fun cashIn(player: EntityPlayer, hand: EnumHand, atBoard: Boolean = false): Boolean {
         val bountyItem = player.getHeldItem(hand)
-        if (!bountyItem.hasTagCompound()) {
+        if (!bountyItem.hasTag()) {
             ensureBounty(player.getHeldItem(hand), player.world)
             return false
         }
 
         val inv = player.inventory.mainInventory
-        val bounty = BountyData().apply { deserializeNBT(bountyItem.tagCompound!!) }
+        val bounty = BountyData().apply { deserializeNBT(bountyItem.tag!!) }
 
         // Gate behind gamestages
         if (Bountiful.config.isRunningGameStages && FacadeGameStages.stagesStillNeededFor(player, bounty).isNotEmpty()) {
-            player.sendTranslation("bountiful.tooltip.requirements")
+            //player.sendTranslation("bountiful.tooltip.requirements")
             return false
         }
 
         if (bounty.hasExpired(player.world)) {
-            player.sendTranslation("bountiful.bounty.expired")
+            //player.sendTranslation("bountiful.bounty.expired")
             return false
         }
 
@@ -154,16 +162,16 @@ class ItemBounty : Item(), IItemBounty {
 
         val entitiesFulfilled = BountyChecker.hasEntitiesFulfilled(bounty)
         if (!entitiesFulfilled) {
-            player.sendTranslation("bountiful.requirements.mobs.needed")
+            //player.sendTranslation("bountiful.requirements.mobs.needed")
             return false
         }
 
 
         return if (!atBoard && Bountiful.config.cashInAtBountyBoard) {
-            player.sendTranslation("bountiful.requirements.met")
+            //player.sendTranslation("bountiful.requirements.met")
             false
         } else {
-            player.sendTranslation("bountiful.bounty.fulfilled")
+            //player.sendTranslation("bountiful.bounty.fulfilled")
             // Reduce count of relevant prerequisite stacks
             BountyChecker.takeItems(player, inv, bounty, invItemsAffected)
 
@@ -176,11 +184,13 @@ class ItemBounty : Item(), IItemBounty {
             val bountyRarity = EnumBountyRarity.getRarityFromInt(bounty.rarity)
 
             // Increment stats
-            player.addStat(BountifulStats.bountiesCompleted)
-            player.addStat(bountyRarity.stat)
+
+            // TODO Reimplement Scoreboard Stats
+            //player.addStat(BountifulStats.bountiesCompleted)
+            //player.addStat(bountyRarity.stat)
 
             // Give XP
-            player.addExperience(bountyRarity.xp)
+            player.giveExperiencePoints(bountyRarity.xp)
 
             true
         }
