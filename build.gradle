@@ -1,0 +1,78 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
+}
+apply plugin: 'net.minecraftforge.gradle'
+//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'idea'
+
+version = '2.3.0'
+group = 'ejektaflex.bountiful' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'bountiful'
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+
+
+repositories {
+    maven { url 'https://minecraft.curseforge.com/api/maven/' }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.13.2-25.0.17'
+
+    //compileOnly 'net.shadowfacts:Forgelin:' + v_forgelin
+    compile("kottle:Kottle:$v_kottle")
+
+    //deobfProvided("mezz.jei:jei_$v_minecraft:$v_jei:api")
+    //runtime("mezz.jei:jei_$v_minecraft:$v_jei")
+
+    //compileOnly(files("libonly/GameStages-$v_minecraft-$v_gamestages-deobf.jar"))
+    //compileOnly("net.darkhax.bookshelf:Bookshelf-$v_minecraft:$v_bookshelf:deobf")
+
+
+}
+
+// Example for how to get properties into the manifest for reading by the runtime..
+jar {
+    manifest {
+        attributes(["Specification-Title": "examplemod",
+                    "Specification-Vendor": "examplemodsareus",
+                    "Specification-Version": "24.0", // We are version 1 of the modlauncher specification
+                    "Implementation-Title": project.name,
+                    "Implementation-Version": "${version}",
+                    "Implementation-Vendor" :"examplemodsareus",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
+    }
+}
+
+minecraft {
+
+    mappings channel: 'snapshot', version: '20180921-1.13'
+
+    runs {
+        client = {
+            // recommended logging data for a userdev environment
+            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // recommended logging level for the console
+            properties 'forge.logging.console.level': 'debug'
+            workingDirectory project.file('run').canonicalPath
+            source sourceSets.main
+        }
+        server = {
+            // recommended logging data for a userdev environment
+            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // recommended logging level for the console
+            properties 'forge.logging.console.level': 'debug'
+            workingDirectory project.file('run').canonicalPath
+            source sourceSets.main
+        }
+    }
+}
+

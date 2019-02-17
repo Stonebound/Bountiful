@@ -14,7 +14,7 @@ data class PickedEntryStack(
     val itemStack: ItemStack?
         get() {
             val stack = content.toItemStack
-            tag?.let { stack?.tagCompound = it }
+            tag?.let { stack?.tag = it }
             return stack
         }
 

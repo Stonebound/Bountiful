@@ -20,7 +20,7 @@ class ContainerBoard(playerInv: InventoryPlayer, boardTE: TileEntityBountyBoard)
 
         for (j in 0 until 3) {
             for (k in 0 until 9) {
-                addSlotToContainer(object : SlotItemHandler(inventory, k + j * 9, 8 + k * 18, 18 + j * 18) {
+                addSlot(object : SlotItemHandler(inventory, k + j * 9, 8 + k * 18, 18 + j * 18) {
                     override fun onSlotChanged() {
                         boardTE.markDirty()
                     }
@@ -39,12 +39,12 @@ class ContainerBoard(playerInv: InventoryPlayer, boardTE: TileEntityBountyBoard)
 
         for (j in 0..2) {
             for (k in 0..8) {
-                this.addSlotToContainer(Slot(playerInv, k + j * 9 + 9, 8 + k * 18, 103 + j * 18 - 19))
+                this.addSlot(Slot(playerInv, k + j * 9 + 9, 8 + k * 18, 103 + j * 18 - 19))
             }
         }
 
         for (i1 in 0..8) {
-            this.addSlotToContainer(Slot(playerInv, i1, 8 + i1 * 18, 142))
+            this.addSlot(Slot(playerInv, i1, 8 + i1 * 18, 142))
         }
 
     }

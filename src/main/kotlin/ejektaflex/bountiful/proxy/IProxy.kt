@@ -1,13 +1,33 @@
 package ejektaflex.bountiful.proxy
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
+import net.minecraftforge.eventbus.api.Event
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
 
 interface IProxy {
-    fun preInit(e: FMLPreInitializationEvent) {}
 
-    fun init(e: FMLInitializationEvent) {}
+    fun loadEvents() {
+        setupClientEvent?.let { loadEvent(it) }
+        setupCommonEvent?.let { loadEvent(it) }
+        loadCompleteEvent?.let { loadEvent(it) }
+    }
 
-    fun postInit(e: FMLPostInitializationEvent) {}
+
+
+    fun <T : Event> loadEvent(func: T.() -> Unit) {
+        FMLJavaModLoadingContext.get().modEventBus.addListener(func)
+    }
+
+    val setupClientEvent: (FMLClientSetupEvent.() -> Unit)?
+        get() = null
+
+    val setupCommonEvent: (FMLCommonSetupEvent.() -> Unit)?
+        get() = null
+
+    val loadCompleteEvent: (FMLLoadCompleteEvent.() -> Unit)?
+        get() = null
+
+
 }

@@ -31,7 +31,7 @@ open class PickedEntry(
     override fun serializeNBT(): NBTTagCompound {
         return NBTTagCompound().apply {
             setString("content", content)
-            setInteger("amount", amount)
+            setInt("amount", amount)
             tag?.let {
                 setTag("nbt", it)
             }
@@ -41,9 +41,9 @@ open class PickedEntry(
 
     override fun deserializeNBT(tag: NBTTagCompound) {
         content = tag.getString("content")
-        amount = tag.getInteger("amount")
+        amount = tag.getInt("amount")
         if (tag.hasKey("nbt")) {
-            nbtJson = tag.getCompoundTag("nbt").toString()
+            nbtJson = tag.getTag("nbt").toString()
         }
         stages = tag.getUnsortedStringSet("stages").toMutableList()
     }

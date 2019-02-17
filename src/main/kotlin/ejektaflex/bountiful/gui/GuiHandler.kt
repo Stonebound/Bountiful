@@ -1,10 +1,12 @@
 package ejektaflex.bountiful.gui
 
 import ejektaflex.bountiful.block.TileEntityBountyBoard
+import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.network.IGuiHandler
+import net.minecraftforge.fml.network.FMLPlayMessages
 
 class GuiHandler : IGuiHandler {
 
@@ -15,6 +17,7 @@ class GuiHandler : IGuiHandler {
         println("Did NOT get Client Gui.")
         return null
     }
+
 
     override fun getServerGuiElement(id: Int, player: EntityPlayer?, world: World?, x: Int, y: Int, z: Int): Any? {
         if (id == BOARD_GUI) {

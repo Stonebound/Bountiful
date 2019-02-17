@@ -4,8 +4,8 @@ import com.google.gson.annotations.Expose
 import ejektaflex.bountiful.api.BountifulAPI
 import ejektaflex.bountiful.api.ext.toEntityEntry
 import net.minecraft.client.resources.I18n
+import net.minecraft.entity.EntityType
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraftforge.fml.common.registry.EntityEntry
 
 data class PickedEntryEntity(
         @Expose(serialize = false, deserialize = false)
@@ -18,16 +18,16 @@ data class PickedEntryEntity(
 
     override fun deserializeNBT(tag: NBTTagCompound) {
         genericPick.deserializeNBT(tag)
-        killedAmount = tag.getInteger("killedAmount")
+        killedAmount = tag.getInt("killedAmount")
     }
 
     override fun serializeNBT(): NBTTagCompound {
         return genericPick.serializeNBT().apply {
-            setInteger("killedAmount", killedAmount)
+            setInt("killedAmount", killedAmount)
         }
     }
 
-    val entityEntry: EntityEntry?
+    val entityEntry: EntityType<*>?
         get() {
             return content.toEntityEntry
         }
@@ -36,7 +36,7 @@ data class PickedEntryEntity(
         get() = entityEntry
 
     override val prettyContent: String
-        get() = ("($killedAmount/$amount) §a" + I18n.format("entity." + entityEntry?.name + ".name") + " Kills§r")
+        get() = ("($killedAmount/$amount) §a" + I18n.format("entity." + entityEntry?.registryName + ".name") + " Kills§r")
 
     override fun toString(): String {
         return "PickedEntry (Entity) [Entity: $content, Amount: $amount, Weight: $weight]"

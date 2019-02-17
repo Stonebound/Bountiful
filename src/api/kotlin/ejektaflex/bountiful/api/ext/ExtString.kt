@@ -1,17 +1,14 @@
 package ejektaflex.bountiful.api.ext
 
 import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityType
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraftforge.fml.common.registry.EntityEntry
-import net.minecraftforge.fml.common.registry.ForgeRegistries
-import net.minecraftforge.oredict.OreDictionary
-
-;
+import net.minecraft.util.ResourceLocation
+import net.minecraftforge.registries.ForgeRegistries
 
 
-val String.toEntityEntry: EntityEntry?
+val String.toEntityEntry: EntityType<*>?
     get() {
         if (":" !in this) {
             return null
@@ -28,23 +25,10 @@ val String.toEntityEntry: EntityEntry?
             }?.value
         }
 
+
         return null
     }
 
-val String.toMeta: Int
-    get() {
-        return when {
-            this == "*" -> OreDictionary.WILDCARD_VALUE
-            else -> {
-                try {
-                    Integer.parseInt(this)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    0
-                }
-            }
-        }
-    }
 
 val String.toItemStack: ItemStack?
     get() {
@@ -54,9 +38,10 @@ val String.toItemStack: ItemStack?
         } else if (sect.size == 2) {
             sect += "0"
         }
-        val item = Item.getByNameOrId("${sect[0]}:${sect[1]}")
+        val item = ForgeRegistries.ITEMS.getValue(ResourceLocation("${sect[0]}:${sect[1]}"))
+        //val item = Item.getByNameOrId("${sect[0]}:${sect[1]}")
         return if (item != null) {
-            ItemStack(item, 1, sect[2].toMeta)
+            ItemStack(item, 1)
         } else {
             null
         }
@@ -65,11 +50,6 @@ val String.toItemStack: ItemStack?
 val ItemStack.toPretty: String
     get() {
         var proto = item.registryName.toString()
-        val meta = this.metadata
-
-        if (meta != 0) {
-            proto += ":$meta"
-        }
 
         return proto
     }
@@ -79,14 +59,7 @@ val ItemStack.toPretty: String
  */
 val IBlockState.pretty: String
     get() {
-        var proto = block.registryName.toString()
-        val meta = block.getMetaFromState(this)
-
-        if (meta != 0) {
-            proto += ":$meta"
-        }
-
-        return proto
+        return block.registryName.toString()
     }
 
 val String.toItem: Item?
