@@ -1,6 +1,6 @@
 package ejektaflex.compat
 
-import ejektaflex.bountiful.data.BountyData
+import ejektaflex.bountiful.data.BountyEntry
 import net.darkhax.gamestages.GameStageHelper
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
@@ -11,8 +11,8 @@ object FacadeGameStages {
         return allPlayers?.any { GameStageHelper.hasAllOf(it, stages) } ?: false
     }
 
-    fun stagesStillNeededFor(player: EntityPlayer, bountyData: BountyData): List<String> {
-        return stagesStillNeededFor(player, bountyData.requiredStages())
+    fun stagesStillNeededFor(player: EntityPlayer, bountyEntry: BountyEntry): List<String> {
+        return stagesStillNeededFor(player, bountyEntry.requiredStages())
     }
 
     fun stagesStillNeededFor(player: EntityPlayer, current: List<String>): List<String> {

@@ -4,10 +4,10 @@ import ejektaflex.bountiful.api.IBountifulAPI
 import ejektaflex.bountiful.api.block.ITileEntityBountyBoard
 import ejektaflex.bountiful.api.config.IBountifulConfig
 import ejektaflex.bountiful.api.ext.stacks
-import ejektaflex.bountiful.api.data.IBountyData
+import ejektaflex.bountiful.api.data.IBountyEntry
 import ejektaflex.bountiful.api.enum.EnumBountyRarity
 import ejektaflex.bountiful.block.TileEntityBountyBoard
-import ejektaflex.bountiful.data.BountyData
+import ejektaflex.bountiful.data.BountyEntry
 import ejektaflex.bountiful.logic.BountyCreator
 import ejektaflex.bountiful.registry.BountyRegistry
 import ejektaflex.bountiful.registry.RewardRegistry
@@ -28,18 +28,18 @@ object InternalAPI : IBountifulAPI {
         return worldIn.getTileEntity(pos) as? TileEntityBountyBoard
     }
 
-    override fun toBountyData(stack: ItemStack): IBountyData {
-        return BountyData.from(stack)
+    override fun toBountyData(stack: ItemStack): IBountyEntry {
+        return BountyEntry.from(stack)
     }
 
-    override fun dataToStack(data: IBountyData): ItemStack {
-        return ItemStack(ContentRegistry.bounty).apply { this.tagCompound = data.serializeNBT() }
+    override fun dataToStack(entry: IBountyEntry): ItemStack {
+        return ItemStack(ContentRegistry.bounty).apply { this.tagCompound = entry.serializeNBT() }
     }
 
     override val config: IBountifulConfig
         get() = Bountiful.config
 
-    override fun createBountyData(worldIn: World, rarity: EnumBountyRarity?): BountyData? {
+    override fun createBountyData(worldIn: World, rarity: EnumBountyRarity?): BountyEntry? {
         return BountyCreator.create(worldIn, rarity)
     }
 

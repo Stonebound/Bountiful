@@ -4,10 +4,9 @@ import ejektaflex.bountiful.Bountiful
 import ejektaflex.bountiful.api.ext.getPickedEntryList
 import ejektaflex.bountiful.api.ext.getUnsortedList
 import ejektaflex.bountiful.api.ext.setUnsortedList
-import ejektaflex.bountiful.api.data.IBountyData
+import ejektaflex.bountiful.api.data.IBountyEntry
 import ejektaflex.bountiful.api.ext.modOriginName
 import ejektaflex.bountiful.api.item.IItemBounty
-import ejektaflex.bountiful.api.logic.BountyNBT
 import ejektaflex.bountiful.api.logic.picked.IPickedEntry
 import ejektaflex.bountiful.api.logic.picked.PickedEntry
 import ejektaflex.bountiful.api.logic.picked.PickedEntryStack
@@ -21,7 +20,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import kotlin.math.max
 
-class BountyData : IBountyData {
+class BountyEntry : IBountyEntry {
 
     // 72000 = 1 hour IRL
     override var boardStamp = Bountiful.config.boardLifespan
@@ -30,7 +29,7 @@ class BountyData : IBountyData {
     override val toGet = ValueRegistry<IPickedEntry>()
     override val rewards = ValueRegistry<PickedEntryStack>()
     override var bountyStamp: Long? = null
-    var worth = 0
+    //var worth = 0
 
     override fun timeLeft(world: World): Long {
         return if (bountyStamp == null) {
@@ -132,7 +131,7 @@ class BountyData : IBountyData {
         boardStamp = tag.getInteger(BountyNBT.BoardStamp.key)
         bountyTime = tag.getLong(BountyNBT.BountyTime.key)
         rarity = tag.getInteger(BountyNBT.Rarity.key)
-        worth = tag.getInteger(BountyNBT.Worth.key)
+        //worth = tag.getInteger(BountyNBT.Worth.key)
         if (tag.hasKey(BountyNBT.BountyStamp.key)) {
             bountyStamp = tag.getLong(BountyNBT.BountyStamp.key)
         }
@@ -148,7 +147,7 @@ class BountyData : IBountyData {
             setInteger(BountyNBT.BoardStamp.key, boardStamp)
             setLong(BountyNBT.BountyTime.key, bountyTime)
             setInteger(BountyNBT.Rarity.key, rarity)
-            setInteger(BountyNBT.Worth.key, worth)
+            //setInteger(BountyNBT.Worth.key, worth)
             bountyStamp?.let { setLong(BountyNBT.BountyStamp.key, it) }
             setUnsortedList(BountyNBT.ToGet.key, toGet.content.toSet())
             setUnsortedList(BountyNBT.Rewards.key, rewards.content.toSet())
@@ -168,9 +167,9 @@ class BountyData : IBountyData {
             }
         }
 
-        fun from(stack: ItemStack): BountyData {
+        fun from(stack: ItemStack): BountyEntry {
             if (stack.item is ItemBounty) {
-                return (stack.item as IItemBounty).getBountyData(stack) as BountyData
+                return (stack.item as IItemBounty).getBountyData(stack) as BountyEntry
             } else {
                 throw Exception("${stack.displayName} is not an IItemBounty and cannot be converted to bounty data!")
             }

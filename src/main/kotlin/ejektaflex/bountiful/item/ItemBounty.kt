@@ -2,16 +2,13 @@ package ejektaflex.bountiful.item
 
 import ejektaflex.bountiful.Bountiful
 import ejektaflex.bountiful.api.BountifulAPI
-import ejektaflex.bountiful.api.data.IBountyData
 import ejektaflex.bountiful.api.enum.EnumBountyRarity
-import ejektaflex.bountiful.api.ext.sendMessage
 import ejektaflex.bountiful.api.ext.sendTranslation
 import ejektaflex.bountiful.api.item.IItemBounty
-import ejektaflex.bountiful.api.logic.BountyNBT
+import ejektaflex.bountiful.data.BountyNBT
 import ejektaflex.bountiful.logic.BountyChecker
-import ejektaflex.bountiful.logic.BountyCreator
 import ejektaflex.bountiful.api.stats.BountifulStats
-import ejektaflex.bountiful.data.BountyData
+import ejektaflex.bountiful.data.BountyEntry
 import ejektaflex.bountiful.logic.error.BountyCreationException
 import ejektaflex.compat.FacadeGameStages
 import net.minecraft.client.resources.I18n
@@ -34,7 +31,7 @@ class ItemBounty : Item(), IItemBounty {
     @SideOnly(Side.CLIENT)
     override fun addInformation(stack: ItemStack, worldIn: World?, tooltip: MutableList<String>, flagIn: ITooltipFlag) {
         if (stack.hasTagCompound()) {
-            val bounty = BountyData().apply { deserializeNBT(stack.tagCompound!!) }
+            val bounty = BountyEntry().apply { deserializeNBT(stack.tagCompound!!) }
             val bountyTipInfo = bounty.tooltipInfo(worldIn!!, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
             for (line in bountyTipInfo) {
                 tooltip.add(line)
@@ -42,9 +39,9 @@ class ItemBounty : Item(), IItemBounty {
         }
     }
 
-    override fun getBountyData(stack: ItemStack): BountyData {
+    override fun getBountyData(stack: ItemStack): BountyEntry {
         if (stack.hasTagCompound() && stack.item is ItemBounty) {
-            return BountyData().apply { deserializeNBT(stack.tagCompound!!) }
+            return BountyEntry().apply { deserializeNBT(stack.tagCompound!!) }
         } else {
             throw Exception("${stack.displayName} is not an ItemBounty or has no NBT data!")
         }
@@ -80,7 +77,7 @@ class ItemBounty : Item(), IItemBounty {
     }
 
     override fun tickBoardTime(stack: ItemStack): Boolean {
-        return tickNumber(stack, BountyData.boardTickFreq.toInt(), BountyNBT.BoardStamp.key)
+        return tickNumber(stack, BountyEntry.boardTickFreq.toInt(), BountyNBT.BoardStamp.key)
     }
 
     override fun getItemStackDisplayName(stack: ItemStack): String {
@@ -100,7 +97,7 @@ class ItemBounty : Item(), IItemBounty {
     }
 
     override fun onUpdate(stack: ItemStack, worldIn: World, entityIn: Entity?, itemSlot: Int, isSelected: Boolean) {
-        if (worldIn.totalWorldTime % BountyData.bountyTickFreq == 1L) {
+        if (worldIn.totalWorldTime % BountyEntry.bountyTickFreq == 1L) {
             ensureTimerStarted(stack, worldIn)
         }
     }
@@ -134,7 +131,7 @@ class ItemBounty : Item(), IItemBounty {
         }
 
         val inv = player.inventory.mainInventory
-        val bounty = BountyData().apply { deserializeNBT(bountyItem.tagCompound!!) }
+        val bounty = BountyEntry().apply { deserializeNBT(bountyItem.tagCompound!!) }
 
         // Gate behind gamestages
         if (Bountiful.config.isRunningGameStages && FacadeGameStages.stagesStillNeededFor(player, bounty).isNotEmpty()) {

@@ -10,7 +10,7 @@ import ejektaflex.bountiful.logic.error.BountyCreationException
 import ejektaflex.bountiful.api.logic.pickable.PickableEntry
 import ejektaflex.bountiful.api.logic.picked.PickedEntry
 import ejektaflex.bountiful.api.logic.picked.PickedEntryStack
-import ejektaflex.bountiful.data.BountyData
+import ejektaflex.bountiful.data.BountyEntry
 import ejektaflex.bountiful.registry.BountyRegistry
 import ejektaflex.bountiful.registry.RewardRegistry
 import net.minecraft.item.ItemStack
@@ -50,7 +50,7 @@ object BountyCreator : IBountyCreator {
         }
     }
 
-    private fun createRandomBounty(world: World, inRarity: EnumBountyRarity?): BountyData {
+    private fun createRandomBounty(world: World, inRarity: EnumBountyRarity?): BountyEntry {
         // Throw exception if we can't complete the bounty
         precheckRegistries(world)
 
@@ -64,9 +64,12 @@ object BountyCreator : IBountyCreator {
             pickedAlready.add(toAdd.copy())
         }
 
-        return BountyData().apply {
+        return BountyEntry().apply {
             rarity = inRarity?.level ?: calcRarity().level
-            worth = 0
+            //worth = 0
+            // Do not embed worth in bounty; Calculate on the fly
+            var worth = 0
+
             var preBountyTime = 0.0
             // Generate bounty data
             pickedAlready.forEach {
@@ -93,12 +96,12 @@ object BountyCreator : IBountyCreator {
         }
     }
 
-    private fun createPremadeBounty(inRarity: EnumBountyRarity?): BountyData {
+    private fun createPremadeBounty(inRarity: EnumBountyRarity?): BountyEntry {
         // TODO this
-        return BountyData()
+        return BountyEntry()
     }
 
-    override fun create(world: World, inRarity: EnumBountyRarity?): BountyData? {
+    override fun create(world: World, inRarity: EnumBountyRarity?): BountyEntry? {
         return if (Bountiful.config.randomBounties) {
             createRandomBounty(world, inRarity)
         } else {

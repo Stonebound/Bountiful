@@ -1,4 +1,4 @@
-package ejektaflex.bountiful.api.logic
+package ejektaflex.bountiful.data
 
 /**
  * An enum class representing all needed NBT variables on an item bounty

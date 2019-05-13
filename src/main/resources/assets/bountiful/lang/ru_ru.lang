@@ -9,8 +9,8 @@ bountiful.bounty.fulfilled=§6Вознаграждение выполнено!
 bountiful.cannot.fulfill=§aНевозможно выполнить это вознаграждение, у Вас нет всего необходимого!
 bountiful.board.empty=§6Нет доступных вознаграждений, вернитесь позже!
 
-bountiful.reloaded.data=Файлы конфигурации JSON перезагружены.
-bountiful.reloading.data=Перезагрузка данных..
+bountiful.reloaded.entry=Файлы конфигурации JSON перезагружены.
+bountiful.reloading.entry=Перезагрузка данных..
 bountiful.requirements.met=§aТребования к награде выполнены. Заберите ваше вознаграждение, щелкнув ПКМ по доске вознаграждений.
 bountiful.requirements.mobs.needed=§cВам нужно убить больше мобов, чтобы выполнить это вознаграждение.
 

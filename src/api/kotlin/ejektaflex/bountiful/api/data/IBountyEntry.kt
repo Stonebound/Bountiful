@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import net.minecraftforge.common.util.INBTSerializable
 
-interface IBountyData : INBTSerializable<NBTTagCompound>, IStageRequirement {
+interface IBountyEntry : INBTSerializable<NBTTagCompound>, IStageRequirement {
 
     /**
      * How long a bounty has left on the Bounty Board

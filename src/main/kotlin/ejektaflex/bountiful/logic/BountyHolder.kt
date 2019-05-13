@@ -7,7 +7,7 @@ import ejektaflex.bountiful.api.ext.filledSlots
 import ejektaflex.bountiful.api.ext.set
 import ejektaflex.bountiful.api.ext.slotRange
 import ejektaflex.bountiful.api.logic.IBountyHolder
-import ejektaflex.bountiful.data.BountyData
+import ejektaflex.bountiful.data.BountyEntry
 import ejektaflex.bountiful.item.ItemBounty
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -23,8 +23,8 @@ open class BountyHolder(override val handler: ItemStackHandler) : IBountyHolder,
             val bounty = handler.getStackInSlot(slot)
             if (bounty.item is ItemBounty) {
                 // Try get bounty data. If it fails, just skip to the next bounty.
-                val data = if (BountyData.isValidBounty(bounty)) {
-                    BountyData.from(bounty)
+                val data = if (BountyEntry.isValidBounty(bounty)) {
+                    BountyEntry.from(bounty)
                 } else {
                     continue
                 }

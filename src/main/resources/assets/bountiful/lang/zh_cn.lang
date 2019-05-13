@@ -11,8 +11,8 @@ bountiful.board.empty=§6没有悬赏可供接取，稍后再来吧！
 
 # Commands
 
-bountiful.reloaded.data=Json配置文件已重载。
-bountiful.reloading.data=重载数据...
+bountiful.reloaded.entry=Json配置文件已重载。
+bountiful.reloading.entry=重载数据...
 bountiful.requirements.met=§a已达到悬赏要求，右键点击悬赏牌完成悬赏。
 bountiful.requirements.mobs.needed=§c你需要击杀更多生物来完成此悬赏。
 bountiful.command.gen.invalid=§6未找到稀有度！

@@ -1,6 +1,6 @@
 package ejektaflex.bountiful.api.item
 
-import ejektaflex.bountiful.api.data.IBountyData
+import ejektaflex.bountiful.api.data.IBountyEntry
 import ejektaflex.bountiful.api.enum.EnumBountyRarity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -10,9 +10,9 @@ import net.minecraftforge.registries.IForgeRegistryEntry
 interface IItemBounty : IForgeRegistryEntry<Item> {
 
     /**
-     * Returns the underlying IBountyData stored in the stack's NBT data.
+     * Returns the underlying IBountyEntry stored in the stack's NBT data.
      */
-    fun getBountyData(stack: ItemStack): IBountyData
+    fun getBountyData(stack: ItemStack): IBountyEntry
 
     /**
      * When given a bounty ItemStack, this method attempts to expire the unitWorth of time the bounty has left to complete.

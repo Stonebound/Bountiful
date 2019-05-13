@@ -2,7 +2,7 @@ package ejektaflex.bountiful.api
 
 import ejektaflex.bountiful.api.block.ITileEntityBountyBoard
 import ejektaflex.bountiful.api.config.IBountifulConfig
-import ejektaflex.bountiful.api.data.IBountyData
+import ejektaflex.bountiful.api.data.IBountyEntry
 import ejektaflex.bountiful.api.enum.EnumBountyRarity
 import ejektaflex.bountiful.api.logic.pickable.PickableEntry
 import ejektaflex.bountiful.api.logic.picked.PickedEntryStack
@@ -35,12 +35,12 @@ interface IBountifulAPI {
     /**
      * Converts an IItemBounty ItemStack to bounty data
      */
-    fun toBountyData(stack: ItemStack): IBountyData
+    fun toBountyData(stack: ItemStack): IBountyEntry
 
     /**
-     * Converts bounty data to a bounty itemstack
+     * Converts bounty entry to a bounty itemstack
      */
-    fun dataToStack(data: IBountyData): ItemStack
+    fun dataToStack(entry: IBountyEntry): ItemStack
 
     /**
      * Retrieves config information about Bountiful
@@ -50,6 +50,6 @@ interface IBountifulAPI {
     /**
      * Creates data for a new bounty.
      */
-    fun createBountyData(worldIn: World, rarity: EnumBountyRarity?): IBountyData?
+    fun createBountyData(worldIn: World, rarity: EnumBountyRarity?): IBountyEntry?
 
 }

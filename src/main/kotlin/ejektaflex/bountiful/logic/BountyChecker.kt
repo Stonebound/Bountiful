@@ -4,7 +4,7 @@ import ejektaflex.bountiful.api.ext.registryName
 import ejektaflex.bountiful.api.ext.sendTranslation
 import ejektaflex.bountiful.api.logic.picked.PickedEntryEntity
 import ejektaflex.bountiful.api.logic.picked.PickedEntryStack
-import ejektaflex.bountiful.data.BountyData
+import ejektaflex.bountiful.data.BountyEntry
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
@@ -21,8 +21,8 @@ object BountyChecker {
         return stack.isItemEqualIgnoreDurability(other) && ItemStack.areItemStackTagsEqual(stack, other)
     }
 
-    fun hasItems(player: EntityPlayer, inv: NonNullList<ItemStack>, data: BountyData): List<ItemStack>? {
-        val stackPicked = data.toGet.content.mapNotNull { it as? PickedEntryStack }
+    fun hasItems(player: EntityPlayer, inv: NonNullList<ItemStack>, entry: BountyEntry): List<ItemStack>? {
+        val stackPicked = entry.toGet.content.mapNotNull { it as? PickedEntryStack }
 
         println(stackPicked)
 
@@ -51,9 +51,9 @@ object BountyChecker {
         }
     }
 
-    fun takeItems(player: EntityPlayer, inv: NonNullList<ItemStack>, data: BountyData, matched: List<ItemStack>) {
+    fun takeItems(player: EntityPlayer, inv: NonNullList<ItemStack>, entry: BountyEntry, matched: List<ItemStack>) {
         // If it does, reduce count of all relevant stacks
-        data.toGet.content.mapNotNull { it as? PickedEntryStack }.forEach { picked ->
+        entry.toGet.content.mapNotNull { it as? PickedEntryStack }.forEach { picked ->
             val stacksToChange = matched.filter { validStackCheck(it, picked.itemStack!!) }
             for (stack in stacksToChange) {
                 if (picked.unitWorth == 0) {
@@ -69,13 +69,13 @@ object BountyChecker {
     /**
      * Tries to tick all relevant entities on Bounty. Returns true if there are none left
      */
-    fun tryTakeEntities(player: EntityPlayer, data: BountyData, bounty: ItemStack, entity: EntityLivingBase) {
+    fun tryTakeEntities(player: EntityPlayer, entry: BountyEntry, bounty: ItemStack, entity: EntityLivingBase) {
         // Don't try take entities from an expired bounty.
-        if (data.hasExpired(player.world)) {
+        if (entry.hasExpired(player.world)) {
             return
         }
 
-        val bountyEntities = data.toGet.content.mapNotNull { it as? PickedEntryEntity }
+        val bountyEntities = entry.toGet.content.mapNotNull { it as? PickedEntryEntity }
 
         bountyEntities.forEach { picked ->
             if (picked.entityEntry?.registryName?.toString() == entity.registryName?.toString()) {
@@ -84,11 +84,11 @@ object BountyChecker {
                 }
             }
         }
-        bounty.tagCompound = data.serializeNBT()
+        bounty.tagCompound = entry.serializeNBT()
     }
 
-    fun hasEntitiesFulfilled(data: BountyData): Boolean {
-        val bountyEntities = data.toGet.content.mapNotNull { it as? PickedEntryEntity }
+    fun hasEntitiesFulfilled(entry: BountyEntry): Boolean {
+        val bountyEntities = entry.toGet.content.mapNotNull { it as? PickedEntryEntity }
         return if (bountyEntities.isEmpty()) {
             true
         } else {
@@ -96,10 +96,10 @@ object BountyChecker {
         }
     }
 
-    fun rewardItems(player: EntityPlayer, data: BountyData, bountyItem: ItemStack) {
+    fun rewardItems(player: EntityPlayer, entry: BountyEntry, bountyItem: ItemStack) {
 
         // Reward player with rewardPools
-        data.rewards.content.forEach { reward ->
+        entry.rewards.content.forEach { reward ->
             var amountNeededToGive = reward.unitWorth
             val stacksToGive = mutableListOf<ItemStack>()
             while (amountNeededToGive > 0) {

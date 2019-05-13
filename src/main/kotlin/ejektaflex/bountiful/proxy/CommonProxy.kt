@@ -13,7 +13,7 @@ import ejektaflex.bountiful.logic.BountyChecker
 import ejektaflex.bountiful.registry.BountyRegistry
 import ejektaflex.bountiful.registry.RewardRegistry
 import ejektaflex.bountiful.api.stats.BountifulStats
-import ejektaflex.bountiful.data.BountyData
+import ejektaflex.bountiful.data.BountyEntry
 import ejektaflex.bountiful.worldgen.VillageBoardComponent
 import ejektaflex.bountiful.worldgen.VillageBoardCreationHandler
 import net.minecraft.entity.player.EntityPlayer
@@ -45,7 +45,7 @@ open class CommonProxy : IProxy {
             val bountyStacks = player.inventory.mainInventory.filter { it.item is ItemBounty }
             if (bountyStacks.isNotEmpty()) {
                 bountyStacks.forEach { stack ->
-                    val data = BountyData.from(stack)
+                    val data = BountyEntry.from(stack)
                     BountyChecker.tryTakeEntities(player, data, stack, e.entityLiving)
                 }
             }
